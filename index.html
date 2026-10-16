@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Simulador Mejores de Carrera 2026</title>
+<meta name="description" content="Simulador de la prueba de conocimientos del concurso Mejores Empleados y Empleadas de Carrera Administrativa 2026 de la Personería de Bogotá. Metodología Tipo I, II y III.">
+<meta name="theme-color" content="#0F766E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFF8F0; --surface:#FFFFFF; --soft:#FDEFE3; --line:#EADBCB;
+  --ink:#24323F; --muted:#5E6B78;
+  --teal:#0F766E; --teal-soft:#D7F0EC;
+  --coral:#E8574B; --coral-soft:#FCE1DD;
+  --amber:#C98A0B; --amber-soft:#FBEBC6;
+  --violet:#6250C8; --violet-soft:#E6E2FA;
+  --ok:#1E7F4F; --ok-soft:#DCF3E6;
+  --bad:#C2362B; --bad-soft:#FBE0DD;
+  --shadow:0 6px 24px rgba(36,50,63,.08);
+  --r:18px; --on:#FFFFFF;
+  --display:'Fraunces',Georgia,serif;
+  --body:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#14191F; --surface:#1C232B; --soft:#232C36; --line:#2F3A46;
+    --ink:#EEF2F5; --muted:#A6B2BE;
+    --teal:#3CC4B4; --teal-soft:#173A37;
+    --coral:#FF8A7E; --coral-soft:#3E2422;
+    --amber:#F2C24E; --amber-soft:#3B3017;
+    --violet:#A598F5; --violet-soft:#2A2645;
+    --ok:#5BD49A; --ok-soft:#173527; --bad:#FF8A7E; --bad-soft:#3E2422;
+    --shadow:0 6px 24px rgba(0,0,0,.35); --on:#0F1418;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14191F; --surface:#1C232B; --soft:#232C36; --line:#2F3A46;
+  --ink:#EEF2F5; --muted:#A6B2BE;
+  --teal:#3CC4B4; --teal-soft:#173A37;
+  --coral:#FF8A7E; --coral-soft:#3E2422;
+  --amber:#F2C24E; --amber-soft:#3B3017;
+  --violet:#A598F5; --violet-soft:#2A2645;
+  --ok:#5BD49A; --ok-soft:#173527; --bad:#FF8A7E; --bad-soft:#3E2422;
+  --shadow:0 6px 24px rgba(0,0,0,.35); --on:#0F1418;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;min-height:100vh}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--teal)}
+:focus-visible{outline:3px solid var(--violet);outline-offset:2px;border-radius:8px}
+.wrap{max-width:880px;margin:0 auto;padding:0 16px 64px}
+/* top bar */
+.top{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .in{max-width:880px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;background:none;border:0;text-align:left}
+.logo{width:36px;height:36px;border-radius:11px;background:conic-gradient(from 200deg,var(--teal),var(--violet),var(--coral),var(--amber),var(--teal));display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;flex:none}
+.brand b{font-family:var(--display);font-size:1.05rem;display:block;line-height:1.1}
+.brand small{color:var(--muted);font-size:.78rem}
+.top .sp{flex:1}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 12px;font-size:.9rem;font-weight:700}
+.progress{height:5px;background:transparent}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--violet));transition:width .3s}
+/* hero */
+.hero{margin:22px 0 18px;padding:26px 22px;border-radius:26px;background:linear-gradient(135deg,var(--teal-soft),var(--violet-soft) 55%,var(--coral-soft));position:relative;overflow:hidden}
+.hero h1{font-family:var(--display);font-size:clamp(1.6rem,5vw,2.3rem);line-height:1.15;margin-bottom:8px}
+.hero p{color:var(--muted);max-width:56ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{background:var(--surface);border-radius:999px;padding:6px 12px;font-size:.85rem;font-weight:700;box-shadow:var(--shadow)}
+.count{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.count div{background:var(--surface);border-radius:14px;padding:10px 14px;min-width:74px;text-align:center;box-shadow:var(--shadow)}
+.count b{font-family:var(--display);font-size:1.6rem;display:block;line-height:1}
+.count span{font-size:.75rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+h2.sec{font-family:var(--display);font-size:1.35rem;margin:26px 0 12px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);text-align:left;display:flex;flex-direction:column;gap:6px;transition:transform .15s,border-color .15s}
+button.card:hover{transform:translateY(-2px);border-color:var(--teal)}
+.card .k{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.card h3{font-family:var(--display);font-size:1.15rem;line-height:1.25}
+.card p{color:var(--muted);font-size:.92rem}
+.card .st{margin-top:auto;padding-top:6px;font-size:.85rem;font-weight:800}
+.c-teal .k{color:var(--teal)} .c-coral .k{color:var(--coral)} .c-amber .k{color:var(--amber)} .c-violet .k{color:var(--violet)}
+.c-teal{border-top:5px solid var(--teal)} .c-coral{border-top:5px solid var(--coral)} .c-amber{border-top:5px solid var(--amber)} .c-violet{border-top:5px solid var(--violet)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{border:0;border-radius:14px;padding:13px 20px;font-weight:800;background:var(--teal);color:var(--on);min-height:48px}
+.btn.alt{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+.btn.coral{background:var(--coral)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+/* topic picker */
+.tlist{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));margin:12px 0}
+.tpick{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--bg);font-size:.9rem;cursor:pointer}
+.tpick input{margin-top:4px;accent-color:var(--teal);width:18px;height:18px;flex:none}
+.tpick .n{font-weight:800;color:var(--muted);font-size:.78rem}
+select,input[type=number]{font:inherit;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+/* quiz */
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:18px 0 10px;flex-wrap:wrap}
+.pill{font-size:.78rem;font-weight:800;border-radius:999px;padding:5px 11px;background:var(--soft);color:var(--muted)}
+.pill.t1{background:var(--teal-soft);color:var(--teal)} .pill.t2{background:var(--amber-soft);color:var(--amber)} .pill.t3{background:var(--violet-soft);color:var(--violet)}
+.timer{font-variant-numeric:tabular-nums;font-weight:800}
+.howto{font-size:.88rem;color:var(--muted);background:var(--soft);border-radius:12px;padding:10px 12px;margin-bottom:12px}
+.qtext{font-size:1.12rem;font-weight:700;margin-bottom:14px}
+.stmts{list-style:none;display:grid;gap:8px;margin:0 0 14px}
+.stmts li{background:var(--bg);border:1px dashed var(--line);border-radius:12px;padding:10px 12px;display:flex;gap:10px}
+.stmts b{color:var(--amber);font-family:var(--display)}
+.ar{display:grid;gap:8px;margin-bottom:14px}
+.ar div{border-radius:12px;padding:10px 12px;background:var(--violet-soft)}
+.ar span{font-size:.75rem;font-weight:800;letter-spacing:.06em;color:var(--violet);display:block}
+.porque{text-align:center;font-weight:800;color:var(--violet);letter-spacing:.2em;font-size:.8rem}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:12px 14px;min-height:52px;transition:border-color .15s,background .15s}
+.opt:hover:not(:disabled){border-color:var(--teal)}
+.opt .l{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:800;background:var(--soft)}
+.opt.sel{border-color:var(--teal);background:var(--teal-soft)}
+.opt.sel .l{background:var(--teal);color:var(--on)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)} .opt.ok .l{background:var(--ok);color:var(--on)}
+.opt.no{border-color:var(--bad);background:var(--bad-soft)} .opt.no .l{background:var(--bad);color:var(--on)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;border-radius:14px;padding:14px;border-left:5px solid}
+.fb.ok{background:var(--ok-soft);border-color:var(--ok)} .fb.no{background:var(--bad-soft);border-color:var(--bad)}
+.fb h4{font-size:1rem;margin-bottom:4px}
+.fb .src{font-size:.82rem;color:var(--muted);margin-top:6px}
+.qnav{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+.mark{background:none;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-weight:700}
+.mark.on{background:var(--amber-soft);border-color:var(--amber);color:var(--amber)}
+.dots{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px;margin-top:16px}
+.dot{height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-weight:800;font-size:.85rem}
+.dot.ans{background:var(--teal-soft);border-color:var(--teal);color:var(--teal)}
+.dot.mk{box-shadow:inset 0 -4px 0 var(--amber)}
+.dot.cur{outline:3px solid var(--violet)}
+/* results */
+.score{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.ring{--p:0;width:130px;height:130px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--soft) 0);display:grid;place-items:center;flex:none}
+.ring div{width:100px;height:100px;border-radius:50%;background:var(--surface);display:grid;place-items:center;text-align:center}
+.ring b{font-family:var(--display);font-size:2rem;line-height:1}
+.ring small{font-size:.75rem;color:var(--muted);font-weight:700}
+.verdict{font-family:var(--display);font-size:1.3rem}
+.bars{display:grid;gap:10px;margin-top:12px}
+.bar .t{display:flex;justify-content:space-between;font-size:.88rem;font-weight:700;gap:8px}
+.bar .tr{height:10px;border-radius:99px;background:var(--soft);overflow:hidden;margin-top:4px}
+.bar .tr i{display:block;height:100%;border-radius:99px}
+.rev{display:grid;gap:10px;margin-top:12px}
+.rev details{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--bg)}
+.rev summary{cursor:pointer;font-weight:700}
+.rev .ans{margin-top:8px;font-size:.92rem}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+.list{padding-left:20px;display:grid;gap:6px}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+td,th{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.warn{background:var(--amber-soft);border-radius:14px;padding:14px;margin-top:12px;font-size:.92rem}
+.tchip{display:inline-block;font-size:.82rem;font-weight:800;border-radius:10px;padding:6px 10px;line-height:1.3}
+.tc0{background:var(--teal-soft);color:var(--teal)} .tc1{background:var(--coral-soft);color:var(--coral)} .tc2{background:var(--violet-soft);color:var(--violet)} .tc3{background:var(--amber-soft);color:var(--amber)}
+.btn.sm{padding:8px 12px;min-height:38px;font-size:.88rem;border-radius:11px;width:auto}
+.drow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}
+.drow:last-child{border-bottom:0}
+.dmain{display:flex;flex-direction:column;gap:4px;align-items:flex-start;flex:1;min-width:220px}
+.st{font-size:.75rem;font-weight:800;border-radius:999px;padding:3px 10px;text-transform:uppercase;letter-spacing:.04em}
+.st.bad{background:var(--bad-soft);color:var(--bad)} .st.amb{background:var(--amber-soft);color:var(--amber)} .st.good{background:var(--ok-soft);color:var(--ok)} .st.muted2{background:var(--soft);color:var(--muted)}
+.bib a{font-weight:700;word-break:break-word}
+.hl{outline:3px solid var(--violet)}
+@media (max-width:560px){.btn.sm{width:auto}}
+footer{margin-top:36px;color:var(--muted);font-size:.82rem;text-align:center}
+@media (max-width:560px){body{font-size:16px}.hero{padding:20px 16px}.btn{width:100%}.qnav .btn{width:auto;flex:1}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="in">
+    <button class="brand" onclick="go('home')" aria-label="Ir al inicio">
+      <span class="logo" aria-hidden="true">PB</span>
+      <span><b>Mejores de Carrera 2026</b><small>Simulador de la prueba de conocimientos</small></span>
+    </button>
+    <span class="sp"></span>
+    <button class="iconbtn" id="themeBtn" onclick="toggleTheme()" aria-label="Cambiar tema claro u oscuro"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="vertical-align:-3px;margin-right:4px"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg>Tema</button>
+  </div>
+  <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+</header>
+<main class="wrap" id="app" tabindex="-1"></main>
+<div aria-live="polite" class="sr" id="live" style="position:absolute;left:-9999px"></div>
+
+<script>
+/* Banco de preguntas — Parte 1: temas institucionales.
+   Tipo I: la opción correcta se escribe PRIMERO (la app baraja las opciones).
+   Tipo II: a = 0:A(1,2,3) 1:B(1,3) 2:C(2,4) 3:D(solo 4)
+   Tipo III: a = 0:A(V,V,explica) 1:B(V,V,no explica) 2:C(V,F) 3:D(F,V) */
+const Q1 = [
+/* ───────── T1 · Acuerdo Distrital 978 de 2025 ───────── */
+{tm:"T1",t:1,q:"El Concejo de Bogotá expidió el Acuerdo 978 de 2025 invocando, entre otras, la atribución del numeral 15 del artículo 12 del Decreto Ley 1421 de 1993. ¿Qué faculta esa disposición?",
+o:["Organizar la Personería y la Contraloría Distritales y dictar las normas necesarias para su funcionamiento","Determinar la estructura general de la Administración Central y adoptar las escalas de remuneración","Crear los empleos necesarios para el funcionamiento del propio Concejo","Expedir las normas que regulan las relaciones del Distrito con sus servidores, en especial la carrera administrativa"],
+e:"El numeral 15 del art. 12 del DL 1421 atribuye al Concejo organizar la Personería y la Contraloría. Los numerales 8, 20 y 21 regulan, respectivamente, la estructura de la Administración Central, los empleos del Concejo y las relaciones con los servidores; no son la base específica para reestructurar la Personería.",f:"Acuerdo 978/2025, encabezado; DL 1421/1993, art. 12"},
+{tm:"T1",t:1,q:"Según el artículo 1 del Acuerdo 978 de 2025, la naturaleza jurídica de la Personería de Bogotá es la de:",
+o:["Un organismo de control y vigilancia que ejerce el Ministerio Público en el Distrito Capital","Una entidad descentralizada del sector Gobierno con autonomía administrativa y presupuestal","Una dependencia territorial de la Procuraduría General de la Nación con sede en Bogotá","Un órgano autónomo del orden nacional adscrito a la Defensoría del Pueblo"],
+e:"El art. 1, con apoyo en los arts. 117 y 118 de la Constitución y los arts. 5, 99, 100 y 101 del DL 1421, define a la Personería como organismo de control y vigilancia que ejerce el Ministerio Público en el Distrito. No pertenece a la administración, ni a la PGN ni a la Defensoría.",f:"Acuerdo 978/2025, art. 1"},
+{tm:"T1",t:1,q:"El artículo 4 del Acuerdo 978 de 2025 menciona expresamente leyes que son «fuentes de funciones adicionales» para la Personería. ¿Cuál NO está entre ellas?",
+o:["Ley 1755 de 2015 (derecho de petición)","Ley 1448 de 2011 (víctimas)","Ley 1480 de 2011 (Estatuto del Consumidor)","Ley 1551 de 2012 (modificatoria de la Ley 136 de 1994)"],
+e:"El art. 4 cita como fuentes adicionales las Leyes 1448 de 2011, 1480 de 2011 y 1551 de 2012. La Ley 1755 de 2015 rige el derecho de petición, pero no es citada en ese artículo.",f:"Acuerdo 978/2025, art. 4"},
+{tm:"T1",t:2,q:"Sobre las dependencias SUPRIMIDAS por el artículo 7 del Acuerdo 978 de 2025:",
+s:["Se suprimió la Personería Delegada para la Coordinación de Gestión de las Personerías Locales.","Se suprimió la Personería Delegada para Asuntos Policivos y Civiles.","Se suprimió la Personería Delegada para la Asistencia en Asuntos Jurisdiccionales.","Se suprimió la Personería Delegada para la Segunda Instancia."],a:1,
+e:"El art. 7 suprimió seis delegadas: las cuatro «de Coordinación» (Personerías Locales, Prevención y Control, Potestad Disciplinaria, Ministerio Público y DD.HH.), la de Orientación y Asistencia a las Personas y la de Asistencia en Asuntos Jurisdiccionales (1 y 3 verdaderas). Asuntos Policivos y Civiles (art. 39) y Segunda Instancia (art. 42) siguen existiendo.",f:"Acuerdo 978/2025, arts. 7, 39 y 42"},
+{tm:"T1",t:1,q:"La Personería Delegada para el Relacionamiento con el Ciudadano y Asuntos Locales, creada por el Acuerdo 978 de 2025, depende de:",
+o:["El Despacho del Personero o Personera","La Personería Auxiliar","La Personería Delegada para la Misionalidad del Ministerio Público y la Función Pública","La Secretaría General"],
+e:"El art. 10 la crea como dependiente del Despacho. A ella se adscriben las Direcciones de Orientación y Asistencia a las Personas, de Asistencia en Asuntos Jurisdiccionales, de Conciliación y las personerías locales (art. 28).",f:"Acuerdo 978/2025, arts. 10 y 28"},
+{tm:"T1",t:1,q:"La Personería Delegada para la Misionalidad del Ministerio Público y la Función Pública depende de:",
+o:["La Personería Auxiliar","El Despacho del Personero, como proceso estratégico","La Delegada para el Relacionamiento con el Ciudadano y Asuntos Locales","La Dirección de Planeación"],
+e:"El art. 30 la crea dependiente de la Personería Auxiliar; su función es asesorar a esa instancia y articular a las delegadas que ejercen Ministerio Público y control a la función pública.",f:"Acuerdo 978/2025, arts. 30-31"},
+{tm:"T1",t:3,af:"Tras el Acuerdo 978 de 2025, la Personería de Bogotá cuenta con treinta personerías locales.",
+rz:"El Acuerdo creó, con enfoque territorial, diez personerías locales identificadas con el numeral II (Usaquén, Chapinero, San Cristóbal, Usme, Bosa, Kennedy, Fontibón, Engativá, Suba y Ciudad Bolívar), que se suman a las veinte existentes.",a:0,
+e:"El art. 25 crea diez personerías locales «II» y el art. 26 enumera las treinta resultantes. La razón explica directamente la afirmación.",f:"Acuerdo 978/2025, arts. 25-26"},
+{tm:"T1",t:1,q:"¿Cuál de las siguientes funciones NO corresponde a la Personería Delegada para Asuntos Policivos y Civiles según el artículo 39 del Acuerdo 978 de 2025?",
+o:["Ejercer las funciones de Ministerio Público ante las Curadurías Urbanas del Distrito Capital","Ejercer el Ministerio Público ante los jueces civiles municipales","Intervenir como Ministerio Público en los procesos contravencionales de movilidad cuando lo considere necesario","Velar por el cumplimiento de las órdenes de policía proferidas por el Alcalde Mayor, los alcaldes locales y los inspectores de policía"],
+e:"El Ministerio Público ante las curadurías urbanas corresponde a la Delegada para el Sector Planeación (art. 63, num. 14). Las otras tres son funciones del art. 39 (nums. 5, 6 y 3).",f:"Acuerdo 978/2025, arts. 39 y 63"},
+{tm:"T1",t:2,q:"Sobre las secretarías técnicas de comités institucionales asignadas por el Acuerdo 978 de 2025:",
+s:["La Dirección de Planeación ejerce la secretaría técnica del Comité Institucional de Gestión y Desempeño.","La Oficina de Control Interno ejerce la secretaría técnica del Comité de Conciliación.","La Oficina de Control Interno ejerce la secretaría técnica del Comité Institucional de Coordinación del Sistema de Control Interno.","La Oficina Asesora Jurídica ejerce la secretaría técnica del Comité Institucional de Coordinación del Sistema de Control Interno."],a:1,
+e:"Art. 40 num. 11: Planeación → CIGD. Art. 41 num. 13: Control Interno → Comité de Coordinación de Control Interno. El Comité de Conciliación tiene como secretaría técnica a la Oficina Asesora Jurídica cuando se le designe (art. 44 num. 9). Son verdaderas 1 y 3.",f:"Acuerdo 978/2025, arts. 40, 41 y 44"},
+{tm:"T1",t:1,q:"Un servidor de carrera de la Personería apela su evaluación definitiva del desempeño laboral. ¿Qué dependencia proyecta, para firma del Personero, la decisión del recurso?",
+o:["La Personería Delegada para la Segunda Instancia","La Oficina de Control Interno","La Oficina Asesora Jurídica","La Subdirección de Desarrollo del Talento Humano"],
+e:"El art. 42 num. 5 asigna a la Delegada para la Segunda Instancia proyectar las decisiones de apelación contra evaluaciones definitivas de desempeño de servidores de carrera y en período de prueba, así como impedimentos y recusaciones en esas actuaciones.",f:"Acuerdo 978/2025, art. 42"},
+{tm:"T1",t:3,af:"La Oficina de Control Interno forma parte de los procesos estratégicos de la Personería, junto con Planeación y la Oficina Asesora Jurídica.",
+rz:"El Acuerdo 978 de 2025 considera a la Oficina de Control Interno independiente, en virtud de que su rol es el control y seguimiento a la operación y gestión de la entidad.",a:3,
+e:"El art. 27 enumera las dependencias de procesos estratégicos y aclara que Control Interno «se considera independiente». La afirmación es falsa; la razón es verdadera.",f:"Acuerdo 978/2025, art. 27"},
+{tm:"T1",t:1,q:"¿Qué función asignó expresamente el Acuerdo 978 de 2025 a la Dirección de Tecnologías de la Información y las Comunicaciones (DTIC)?",
+o:["Expedir lineamientos y directrices para la adopción y uso responsable de la inteligencia artificial en los procesos institucionales","Certificar ante la Superintendencia de Industria y Comercio el cumplimiento de la Ley 1581 de 2012","Ejercer la secretaría técnica del Comité Institucional de Gestión y Desempeño","Administrar el Sistema Distrital de Quejas y Soluciones de toda la Administración Distrital"],
+e:"El art. 18 num. 12 asigna a la DTIC expedir lineamientos para el uso responsable de la IA. La secretaría del CIGD es de Planeación; las demás opciones no le corresponden.",f:"Acuerdo 978/2025, art. 18"},
+{tm:"T1",t:1,q:"Una persona solicita su inscripción en el Registro Único de Víctimas más de dos años después del hecho victimizante. Según el Acuerdo 978 de 2025, la Delegada para la Protección de las Víctimas debe:",
+o:["Investigar las circunstancias de tiempo, modo y lugar para establecer si existieron barreras que dificultaron el acceso a la protección del Estado","Rechazar de plano la solicitud por extemporánea","Remitir la solicitud a la Fiscalía para que valide los hechos","Ordenar a la Unidad para las Víctimas la inclusión inmediata en el registro"],
+e:"El art. 36 num. 3 ordena investigar las circunstancias cuando la solicitud llega pasados más de dos años, para determinar si hubo barreras de acceso. La decisión de inclusión corresponde a la Unidad para las Víctimas.",f:"Acuerdo 978/2025, art. 36"},
+{tm:"T1",t:1,q:"Con el Acuerdo 978 de 2025, la antigua Personería Delegada para la Potestad Disciplinaria IV pasó a denominarse:",
+o:["Personería Delegada para el Juzgamiento Disciplinario I","Personería Delegada para la Instrucción Disciplinaria IV","Personería Delegada para la Segunda Instancia","Dirección de Investigaciones Especiales y Apoyo Técnico"],
+e:"El art. 8 renombró las Potestades Disciplinarias I a III como de Instrucción Disciplinaria I a III, y la IV como Juzgamiento Disciplinario I, en armonía con la separación de instrucción y juzgamiento de la Ley 2094 de 2021.",f:"Acuerdo 978/2025, art. 8"},
+{tm:"T1",t:2,q:"Sobre las funciones de la Personería Delegada para la Defensa y Protección de los Derechos Humanos II:",
+s:["Verifica las acciones de promoción de derechos con enfoque diferencial y énfasis en sujetos de especial protección constitucional.","Ejerce de forma exclusiva el Ministerio Público ante las URI y estaciones de policía.","Realiza acompañamiento a las alertas tempranas emitidas por la Defensoría del Pueblo.","Ejerce la secretaría técnica de la Mesa Distrital de Participación Efectiva de Víctimas."],a:1,
+e:"Art. 34 nums. 2 y 9: enfoque diferencial y alertas tempranas (1 y 3 verdaderas). El Ministerio Público ante personas privadas de la libertad (URI, estaciones) es de la Delegada de DD.HH. I (art. 32 num. 2) y la secretaría técnica de la Mesa de Víctimas es de la Delegada para las Víctimas (art. 36 num. 7).",f:"Acuerdo 978/2025, arts. 32, 34 y 36"},
+
+/* ───────── T2 · Decreto Ley 1421 de 1993 ───────── */
+{tm:"T2",t:1,q:"Según el artículo 5 del Decreto Ley 1421 de 1993, son organismos de control y vigilancia del Distrito Capital:",
+o:["La Personería, la Contraloría y la Veeduría","La Personería, la Contraloría y la Procuraduría","La Personería, la Veeduría y la Defensoría del Pueblo","La Contraloría, la Veeduría y la Secretaría General"],
+e:"El art. 5, tras enumerar las autoridades de gobierno y administración, señala que son organismos de control y vigilancia la Personería, la Contraloría y la Veeduría.",f:"DL 1421/1993, art. 5"},
+{tm:"T2",t:1,q:"El Personero que ejerza el cargo en propiedad solo puede ser suspendido o removido antes del vencimiento de su período por:",
+o:["Sentencia judicial o decisión de la Procuraduría General de la Nación","Decisión del Concejo adoptada con mayoría calificada","Moción de observaciones aprobada por el Concejo","Decisión del Alcalde Mayor, previa solicitud de la Contraloría"],
+e:"El art. 17 consagra la inamovilidad del Contralor y del Personero: solo sentencia judicial o decisión de la PGN. La moción de observaciones (art. 15) permite «observar» decisiones, pero no remover.",f:"DL 1421/1993, arts. 15 y 17"},
+{tm:"T2",t:1,q:"Si el Concejo cita al Personero en ejercicio del control político, la citación debe hacerse:",
+o:["Con anticipación no menor de cinco días hábiles y en cuestionario escrito","Con anticipación no menor de tres días calendario y de forma verbal","Con anticipación no menor de diez días hábiles y en cuestionario escrito","Sin término mínimo, siempre que se trate de sesiones extraordinarias"],
+e:"El art. 14 exige cuestionario escrito y anticipación no menor de cinco días hábiles; el citado radica la respuesta dentro del tercer día hábil siguiente al recibo.",f:"DL 1421/1993, art. 14"},
+{tm:"T2",t:2,q:"Sobre las atribuciones del Personero como agente del Ministerio Público (art. 99 DL 1421):",
+s:["Puede actuar directamente o por delegados en procesos civiles, contenciosos, laborales, de familia, penales, agrarios, mineros y de policía.","Sus delegados deben acreditar las mismas calidades de los jueces ante quienes actúan.","Puede interponer la acción de tutela y asumir la representación del Defensor del Pueblo cuando este se la delegue.","Le corresponde adelantar los procesos de responsabilidad fiscal contra los servidores distritales."],a:1,
+e:"Son verdaderas 1 y 3 (art. 99 nums. 1 y 4). El inciso final aclara que los delegados NO deben acreditar las calidades de magistrados, jueces y fiscales. La responsabilidad fiscal es de la Contraloría.",f:"DL 1421/1993, art. 99"},
+{tm:"T2",t:1,q:"Como veedor ciudadano, para velar por la efectividad del derecho de petición, el Personero debe, según el DL 1421:",
+o:["Instruir a quienes deseen presentar una petición y escribir las de quienes no pudieren o no supieren hacerlo","Resolver de fondo las peticiones dirigidas a otras entidades distritales","Imponer multas sucesivas a las autoridades que no respondan dentro del término","Autorizar a las entidades la ampliación del plazo de respuesta"],
+e:"El art. 100 num. 4 le ordena instruir debidamente, escribir las peticiones de quienes no puedan o sepan hacerlo y solicitar que se tramiten. No decide por otras entidades ni impone multas.",f:"DL 1421/1993, art. 100"},
+{tm:"T2",t:3,af:"El Personero debe velar por el respeto de los derechos humanos de las personas recluidas en establecimientos carcelarios, psiquiátricos, hospitalarios, ancianatos y orfelinatos.",
+rz:"El Decreto Ley 1421 de 1993 le asigna esa atribución en su calidad de defensor de los derechos humanos.",a:0,
+e:"Es la atribución del art. 101 num. 6, ubicada en el catálogo del Personero como defensor de los derechos humanos. La razón explica la afirmación.",f:"DL 1421/1993, art. 101"},
+{tm:"T2",t:1,q:"Según el texto vigente del artículo 97 del DL 1421 (modificado por la Ley 1031 de 2006), el período del Personero Distrital es:",
+o:["Institucional de cuatro años, que inicia el 1 de marzo y concluye el último día de febrero","Personal de tres años, que inicia el 1 de enero siguiente a su elección","Institucional de cuatro años, coincidente con el del Alcalde Mayor y que inicia el 1 de enero","De cuatro años, que inicia el 1 de agosto, al comenzar el segundo período de sesiones del Concejo"],
+e:"El art. 97, modificado por la Ley 1031 de 2006, fija un período institucional de cuatro años del 1 de marzo al último día de febrero. El texto original (art. 96, derogado) preveía tres años.",f:"DL 1421/1993, art. 97"},
+{tm:"T2",t:1,q:"En caso de falta temporal del Personero Distrital, el cargo lo desempeña:",
+o:["El funcionario de la Personería que le siga en jerarquía","La persona que designe el Concejo en sesión extraordinaria","La persona que designe el Alcalde Mayor","El Procurador Regional de Bogotá"],
+e:"El art. 98: en faltas temporales asume el funcionario que le siga en jerarquía; en faltas absolutas el Concejo elige para el resto del período.",f:"DL 1421/1993, art. 98"},
+{tm:"T2",t:1,q:"Entre las atribuciones especiales del Personero (art. 102 DL 1421) está:",
+o:["Rendir semestralmente informe al Concejo sobre el cumplimiento de sus funciones","Rendir anualmente informe al Alcalde Mayor sobre la gestión de la Personería","Rendir trimestralmente informe a la Procuraduría General de la Nación","Presentar semestralmente su presupuesto a la Contraloría para aprobación"],
+e:"El art. 102 num. 2 dispone el informe semestral al Concejo. También le corresponde nombrar y remover a sus funcionarios, presentar proyectos de acuerdo y expedir certificados de antecedentes disciplinarios.",f:"DL 1421/1993, art. 102"},
+{tm:"T2",t:2,q:"Sobre la estructura administrativa del Distrito Capital (art. 54 DL 1421):",
+s:["La Personería integra el sector descentralizado por servicios.","El sector de las localidades lo integran las juntas administradoras y los alcaldes locales.","La Universidad Distrital Francisco José de Caldas es un establecimiento público del sector central.","Las empresas industriales o comerciales y las sociedades de economía mixta hacen parte del sector descentralizado."],a:2,
+e:"Son verdaderas 2 y 4. La Personería es organismo de control, no parte de la administración (art. 5). La Universidad Distrital tiene naturaleza de ente universitario autónomo (art. 54).",f:"DL 1421/1993, arts. 5 y 54"},
+{tm:"T2",t:1,q:"Según el DL 1421, el Personero puede presentar proyectos de acuerdo:",
+o:["En materias relacionadas con sus atribuciones","Sobre cualquier materia de interés distrital","Únicamente sobre el presupuesto anual de rentas y gastos","En ningún caso, porque la iniciativa es privativa del Alcalde y los concejales"],
+e:"El art. 13 permite al personero, al contralor y a las juntas administradoras presentar proyectos en materias relacionadas con sus atribuciones; el art. 102 num. 3 lo reitera.",f:"DL 1421/1993, arts. 13 y 102"},
+{tm:"T2",t:3,af:"El Concejo es la suprema autoridad del Distrito Capital.",
+rz:"En materia administrativa las atribuciones del Concejo son de carácter ejecutivo y de gestión directa de los servicios públicos.",a:2,
+e:"El art. 8 dice que el Concejo es la suprema autoridad, pero precisa que en materia administrativa sus atribuciones son de carácter NORMATIVO; además vigila y controla la gestión. La ejecución corresponde al Alcalde Mayor (art. 35).",f:"DL 1421/1993, arts. 8 y 35"},
+{tm:"T2",t:1,q:"La moción de observaciones contra decisiones del Personero requiere ser propuesta con la firma de:",
+o:["Por lo menos la tercera parte de los miembros del Concejo","Por lo menos la mitad más uno de los miembros del Concejo","La Mesa Directiva y la comisión que adelantó el debate","Al menos diez concejales de distintos partidos"],
+e:"El art. 15: propuesta con firma de al menos la tercera parte, votada entre el tercer y el décimo día siguientes al debate y aprobada por la mitad más uno de los miembros. Aplica también al Contralor y al Personero.",f:"DL 1421/1993, art. 15"},
+
+/* ───────── T3 · Resolución 180 de 2025 — MECI y Modelo de Gestión ───────── */
+{tm:"T3",t:1,q:"¿Qué describe correctamente el objeto de la Resolución 180 del 6 de mayo de 2025 de la Personería de Bogotá?",
+o:["Adopta el Modelo Estándar de Control Interno (MECI), crea el Comité Directivo Institucional, adopta el Modelo de Gestión y sus sistemas de gestión, y deroga la Resolución 250 de 2023","Adopta el Plan Estratégico Institucional 2024-2028 y crea el Comité Institucional de Gestión y Desempeño","Adopta el Código de Integridad y conforma el equipo de gestores de integridad","Actualiza el Manual Específico de Funciones y de Competencias Laborales"],
+e:"Es el título de la Resolución 180 de 2025 publicado por la entidad. El Manual de funciones se actualizó por la Resolución 1567-10000-2026.",f:"Personería de Bogotá, Resoluciones 2025"},
+{tm:"T3",t:1,q:"El Modelo Estándar de Control Interno, en su estructura vigente, se organiza en cinco componentes. ¿Cuál opción los recoge?",
+o:["Ambiente de control, evaluación del riesgo, actividades de control, información y comunicación, y actividades de monitoreo","Planear, hacer, verificar, actuar y mejorar","Direccionamiento estratégico, talento humano, gestión con valores, evaluación de resultados y gestión del conocimiento","Autocontrol, autorregulación, autogestión, autoevaluación y autodisciplina"],
+e:"La estructura del MECI sigue el modelo COSO: ambiente de control, evaluación (gestión) del riesgo, actividades de control, información y comunicación, y monitoreo. La tercera opción mezcla dimensiones de MIPG; la cuarta, principios del MECI 2014.",f:"Ley 87/1993; Dec. 1083/2015 mod. Dec. 1499/2017 (MECI)"},
+{tm:"T3",t:2,q:"Sobre el esquema de líneas de defensa del MECI:",
+s:["La línea estratégica está a cargo del Comité Directivo Institucional y del Comité Institucional de Coordinación del Sistema de Control Interno.","La primera línea de defensa la ejerce la Oficina de Control Interno mediante auditorías.","La segunda línea la integran, entre otros, el Personero Auxiliar, el Secretario General y el Director de Planeación.","La tercera línea de defensa corresponde a los gerentes públicos y líderes de proceso."],a:1,
+e:"Verdaderas 1 y 3. Según la Res. 180, la primera línea son los responsables de procesos, jefes de dependencia, gerentes de proyectos y equipos de trabajo; la tercera es el Jefe de la Oficina de Control Interno.",f:"Res. 180/2025, art. 3"},
+{tm:"T3",t:1,q:"En la Personería de Bogotá, la secretaría técnica del Comité Institucional de Coordinación del Sistema de Control Interno la ejerce:",
+o:["La Oficina de Control Interno","La Dirección de Planeación","La Secretaría General","La Oficina Asesora Jurídica"],
+e:"El Acuerdo 978 de 2025, art. 41 num. 13, la asigna a la Oficina de Control Interno.",f:"Acuerdo 978/2025, art. 41"},
+{tm:"T3",t:3,af:"La Personería de Bogotá, como organismo de control, está obligada a aplicar la política de control interno de la Ley 87 de 1993.",
+rz:"El Decreto 1083 de 2015, modificado por el Decreto 1499 de 2017, dispone que los organismos de control aplican la política de control interno y las demás políticas de gestión y desempeño en la medida en que les sean aplicables.",a:0,
+e:"El régimen de MIPG prevé que órganos autónomos y de control apliquen la política de control interno de la Ley 87 y las demás políticas en lo que les sea aplicable. Eso explica que la Personería adopte el MECI y un Modelo de Gestión propio.",f:"Dec. 1083/2015 mod. Dec. 1499/2017; Ley 87/1993"},
+{tm:"T3",t:1,q:"La Ley 87 de 1993 define el control interno como:",
+o:["El sistema integrado por el esquema de organización y el conjunto de planes, métodos, principios, normas, procedimientos y mecanismos de verificación y evaluación adoptados por una entidad","La función de auditoría externa que realizan las contralorías sobre la gestión fiscal","El control previo que la oficina de control interno ejerce sobre cada acto administrativo antes de su firma","La facultad disciplinaria del jefe de la entidad sobre sus subalternos"],
+e:"Art. 1 de la Ley 87. El control interno no es control previo ni coadministración; tampoco equivale al control fiscal externo.",f:"Ley 87/1993, art. 1"},
+{tm:"T3",t:1,q:"¿Cuál de los siguientes NO es un rol de las oficinas de control interno según el Decreto 648 de 2017?",
+o:["Coadministrar y aprobar previamente los actos de gestión de los procesos","Liderazgo estratégico","Evaluación de la gestión del riesgo","Relación con entes externos de control"],
+e:"Los roles son: liderazgo estratégico, enfoque hacia la prevención, evaluación de la gestión del riesgo, evaluación y seguimiento, y relación con entes externos de control. La OCI no coadministra, para preservar su independencia.",f:"Dec. 1083/2015, art. 2.2.21.5.3 (Dec. 648/2017)"},
+{tm:"T3",t:2,q:"Sobre los principios del control interno tradicionalmente asociados al MECI:",
+s:["El autocontrol es la capacidad de cada servidor de evaluar y controlar su propio trabajo.","La autorregulación es la capacidad de la entidad para desarrollar internamente métodos y normas que regulen su gestión.","La autogestión es la capacidad de interpretar, coordinar y aplicar de manera efectiva la función administrativa asignada.","El autocontrol es una responsabilidad exclusiva de la Oficina de Control Interno."],a:0,
+e:"Las tres primeras son correctas. El autocontrol corresponde a todos los servidores; la Oficina de Control Interno lo fomenta pero no lo concentra.",f:"MECI – principios"},
+{tm:"T3",t:1,q:"En la Personería de Bogotá, la secretaría técnica del Comité Institucional de Gestión y Desempeño corresponde a:",
+o:["La Dirección de Planeación","La Oficina de Control Interno","La Subdirección de Desarrollo del Talento Humano","La Personería Auxiliar"],
+e:"Acuerdo 978 de 2025, art. 40 num. 11. A Planeación también le corresponde dirigir la implementación del modelo de planeación y de los sistemas de gestión (num. 5).",f:"Acuerdo 978/2025, art. 40"},
+{tm:"T3",t:3,af:"Los informes de la Oficina de Control Interno sustituyen la responsabilidad de los líderes de proceso de identificar y controlar sus riesgos.",
+rz:"En el esquema de líneas de defensa, la Oficina de Control Interno realiza una evaluación independiente y objetiva.",a:3,
+e:"La gestión del riesgo es de la primera línea (líderes de proceso). La OCI evalúa de forma independiente, sin sustituir a nadie. Afirmación falsa, razón verdadera.",f:"MECI – líneas de defensa"},
+
+/* ───────── T4 · Plan Estratégico Institucional 2024-2028 ───────── */
+{tm:"T4",t:1,q:"El PEI 2024-2028 de la Personería se articula con el Plan Distrital de Desarrollo denominado:",
+o:["«Bogotá Camina Segura»","«Bogotá Mejor para Todos»","«Un Nuevo Contrato Social y Ambiental para la Bogotá del Siglo XXI»","«Bogotá Humana»"],
+e:"El Plan Distrital de Desarrollo 2024-2028 es «Bogotá Camina Segura». Los proyectos de inversión de la Personería aparecen reportados en él.",f:"PDD 2024-2028; SDP, reporte de inversión"},
+{tm:"T4",t:2,q:"Sobre los objetivos estratégicos y de calidad de la Personería (PEI 2024-2028 / Acuerdo 978, art. 3):",
+s:["Fortalecer la promoción de derechos, la prevención y control a la función pública con enfoque territorial, diferencial e intersectorial, y la potestad disciplinaria.","Promover la participación ciudadana y la articulación interinstitucional para la protección de los derechos y el interés general.","Fomentar una cultura de gestión del conocimiento, la innovación y la investigación como instrumentos transversales.","Maximizar el recaudo de multas disciplinarias como fuente de financiación de la entidad."],a:0,
+e:"Los objetivos 1, 2 y 3 son textuales; el cuarto objetivo real es fortalecer las capacidades institucionales mediante la modernización y la transformación tecnológica.",f:"Acuerdo 978/2025, art. 3; personeriabogota.gov.co"},
+{tm:"T4",t:1,q:"¿Cuántos objetivos estratégicos y de calidad tiene la Personería de Bogotá según su plataforma estratégica vigente?",
+o:["Cuatro","Tres","Cinco","Siete"],
+e:"Son cuatro: promoción de derechos y control; participación y articulación; gestión del conocimiento e innovación; modernización y transformación tecnológica.",f:"Acuerdo 978/2025, art. 3"},
+{tm:"T4",t:1,q:"Según el PEI 2024-2028, ¿qué proyecto de inversión busca modernizar la infraestructura física de los espacios de la entidad para prestar los servicios en condiciones adecuadas para funcionarios y usuarios?",
+o:["8199 – Modernización institucional de la Personería de Bogotá","8201 – Fortalecimiento de la gestión de la potestad disciplinaria","8209 – Fortalecimiento del ejercicio de protección de los derechos humanos y el DIH","8181 – Atención integral a la primera infancia"],
+e:"El PEI describe así el proyecto de Modernización institucional (8199 en el reporte de la SDP). El PEI despliega cuatro proyectos: potestad disciplinaria (8201), prevención y control a la función pública, protección de DD.HH. y DIH (8209) y modernización institucional.",f:"PEI 01-PL-012 v4, num. 6.5; SDP, reporte de inversión"},
+{tm:"T4",t:3,af:"El PEI 2024-2028 de la Personería debe articularse con el Plan Distrital de Desarrollo.",
+rz:"La Personería, como organismo de control, carece de autonomía administrativa y presupuestal.",a:2,
+e:"La articulación con el PDD es cierta: los proyectos de inversión se inscriben ante la Secretaría Distrital de Planeación. Pero la razón es falsa: los arts. 5 y 6 del Acuerdo 978 reconocen autonomía administrativa y presupuestal.",f:"Acuerdo 978/2025, arts. 5, 6 y 40"},
+{tm:"T4",t:1,q:"Según la misión institucional, la Personería actúa de manera:",
+o:["Oportuna y resolutiva para garantizar el respeto de los derechos fundamentales","Preventiva y sancionatoria para garantizar el recaudo fiscal","Subsidiaria y residual frente a la Procuraduría General","Concurrente y supletiva frente a la Administración Distrital"],
+e:"Misión (Acuerdo 978, art. 2): ejerce funciones de Ministerio Público, defensor de DD.HH. que vigila la conducta de los servidores, actuando de manera oportuna y resolutiva.",f:"Acuerdo 978/2025, art. 2"},
+{tm:"T4",t:1,q:"¿Qué dependencia dirige la formulación, adopción y ejecución de la plataforma estratégica, táctica y operativa de la Personería?",
+o:["La Dirección de Planeación","La Oficina de Control Interno","La Dirección de Gestión del Conocimiento, Analítica e Innovación","La Oficina de Relaciones Nacionales e Internacionales"],
+e:"Acuerdo 978 de 2025, art. 40 num. 1. Control Interno evalúa de manera independiente; Conocimiento e Innovación analiza datos y promueve investigación.",f:"Acuerdo 978/2025, art. 40"},
+{tm:"T4",t:2,q:"Sobre la planeación institucional en entidades públicas:",
+s:["El PEI de la Personería se adopta mediante acuerdo del Concejo de Bogotá.","El Plan de Acción Institucional despliega anualmente los objetivos del plan estratégico.","El Decreto 612 de 2018 fija el 31 de marzo como fecha límite para publicar el plan de acción.","El Decreto 612 de 2018 ordena integrar los planes institucionales y estratégicos al plan de acción y publicarlo en la web a más tardar el 31 de enero."],a:2,
+e:"Verdaderas 2 y 4. El PEI lo adopta la propia entidad, no el Concejo, y el plazo de publicación del Decreto 612 es el 31 de enero.",f:"Dec. 1083/2015, arts. 2.2.22.3.14 y 2.2.22.3.15 (Dec. 612/2018)"},
+{tm:"T4",t:1,q:"El cuarto objetivo estratégico de la Personería apunta a:",
+o:["Fortalecer las capacidades institucionales a través de la modernización y la transformación tecnológica","Ampliar la planta de personal mediante la creación de nuevas delegadas","Asumir funciones de control fiscal sobre las entidades distritales","Fortalecer la representación judicial del Distrito en procesos contenciosos"],
+e:"Objetivo 4: modernización y transformación tecnológica. Las otras opciones no hacen parte de la plataforma estratégica; el control fiscal corresponde a la Contraloría.",f:"Acuerdo 978/2025, art. 3"},
+
+/* ───────── T5 · Sistema de Gestión Ambiental ───────── */
+{tm:"T5",t:1,q:"El instrumento mediante el cual las entidades distritales, incluida la Personería, planean e implementan su gestión ambiental interna es:",
+o:["El Plan Institucional de Gestión Ambiental (PIGA)","El Plan de Ordenamiento Territorial (POT)","El Plan de Gestión Integral de Residuos Sólidos (PGIRS)","El Plan de Manejo Ambiental de proyectos de infraestructura"],
+e:"El PIGA es el instrumento de planeación ambiental institucional de las entidades distritales y se articula con el Plan de Gestión Ambiental del Distrito.",f:"Dec. Distrital 456/2008; Res. SDA 242/2014"},
+{tm:"T5",t:1,q:"En términos de ISO 14001, el consumo de energía eléctrica en las sedes de la Personería es:",
+o:["Un aspecto ambiental","Un impacto ambiental","Un requisito legal","Un objetivo ambiental"],
+e:"El aspecto es el elemento de las actividades que interactúa con el ambiente (el consumo); el impacto es el cambio que resulta (agotamiento de recursos, emisiones).",f:"NTC-ISO 14001:2015, 3.2"},
+{tm:"T5",t:1,q:"Según el código nacional de colores (Res. 2184 de 2019), el papel limpio y seco, el plástico, el vidrio y los metales se depositan en la bolsa o recipiente de color:",
+o:["Blanco","Negro","Verde","Rojo"],
+e:"Blanco: aprovechables. Negro: no aprovechables. Verde: orgánicos aprovechables.",f:"Res. 2184/2019 MinAmbiente"},
+{tm:"T5",t:2,q:"Sobre los programas que integran el PIGA de las entidades distritales:",
+s:["Uso eficiente del agua.","Licenciamiento ambiental de proyectos de infraestructura.","Gestión integral de residuos.","Expedición de permisos de vertimiento a terceros."],a:1,
+e:"Los programas del PIGA incluyen uso eficiente del agua, uso eficiente de la energía, gestión integral de residuos, consumo sostenible e implementación de prácticas sostenibles. El licenciamiento y los permisos son funciones de autoridad ambiental.",f:"Res. SDA 242/2014"},
+{tm:"T5",t:1,q:"En el informe de la política «Componente Ambiental» de la Medición del Desempeño Institucional 2024, la Personería de Bogotá obtuvo:",
+o:["Nivel ALTO, con 91,79 %","Nivel MEDIO, con 63,69 %","Nivel ALTO, con 93,59 %","Nivel BAJO, por debajo de 50 %"],
+e:"El informe de la Secretaría General registra a la Personería con 91,79 % (ALTO). El 93,59 % corresponde a la Contraloría de Bogotá y el 63,69 % a otra entidad.",f:"Secretaría General, Informe Política MDI 2024 Componente Ambiental"},
+{tm:"T5",t:1,q:"La figura del gestor ambiental en las entidades distritales, responsable de liderar el PIGA, fue creada por:",
+o:["El Acuerdo Distrital 333 de 2008","La Ley 99 de 1993","El Decreto 1499 de 2017","El Acuerdo Distrital 978 de 2025"],
+e:"El Acuerdo 333 de 2008 del Concejo creó la figura del gestor ambiental en las entidades distritales.",f:"Acuerdo Distrital 333/2008"},
+{tm:"T5",t:3,af:"Un sistema de gestión ambiental basado en ISO 14001 se estructura sobre el ciclo PHVA (planificar, hacer, verificar, actuar).",
+rz:"La norma exige que la política ambiental incluya compromisos de protección del ambiente, de cumplimiento de requisitos legales y de mejora continua.",a:1,
+e:"Ambas son verdaderas, pero el contenido mínimo de la política ambiental no explica por qué la norma se estructura en el ciclo PHVA.",f:"NTC-ISO 14001:2015"},
+{tm:"T5",t:1,q:"El PIGA de cada entidad se articula con el Plan de Gestión Ambiental del Distrito, reformado por:",
+o:["El Decreto Distrital 456 de 2008","El Decreto Ley 1421 de 1993","La Ley 1712 de 2014","El Acuerdo Distrital 257 de 2006"],
+e:"El Decreto 456 de 2008 reformó el Plan de Gestión Ambiental del Distrito Capital, del que se desprenden los PIGA institucionales.",f:"Dec. Distrital 456/2008"},
+{tm:"T5",t:3,af:"La política ambiental de una entidad debe ser apropiada a su propósito y contexto y servir de marco para fijar objetivos ambientales.",
+rz:"En un SGA la política ambiental la aprueba la autoridad ambiental competente mediante licencia.",a:2,
+e:"La política la establece la alta dirección de la propia organización (ISO 14001, 5.2); no la aprueba una autoridad ambiental por licencia.",f:"NTC-ISO 14001:2015, 5.2"},
+{tm:"T5",t:1,q:"Según la política ambiental de la Personería de Bogotá, ¿quiénes son corresponsables de incorporar prácticas que protejan el ambiente?",
+o:["La entidad y sus servidores","Únicamente el gestor ambiental de la entidad","Únicamente la Dirección Administrativa y Financiera","La Secretaría Distrital de Ambiente, como autoridad ambiental"],
+e:"La política ambiental publicada en la intranet señala que la entidad y sus servidores son corresponsables de incorporar prácticas protectoras del ambiente. El gestor ambiental lidera el PIGA, pero no concentra la responsabilidad.",f:"Intranet Personería – Sistema de Gestión Ambiental (SGA)"},
+{tm:"T5",t:2,q:"Sobre los compromisos de la política ambiental de la Personería de Bogotá:",
+s:["Se limita al cumplimiento legal, sin compromiso de mejora continua.","Incluye desarrollar competencias para el consumo responsable y la ecoeficiencia.","Es independiente de la misión, la visión y los objetivos institucionales.","Incluye prevenir la contaminación."],a:2,
+e:"Los compromisos de la política son: cumplir la normatividad ambiental, identificar aspectos e impactos, buscar la mejora continua, desarrollar competencias para el consumo responsable y la ecoeficiencia, prevenir la contaminación y alinearse con la misión, la visión y los objetivos institucionales. Son verdaderas la 2 y la 4.",f:"Intranet Personería – Sistema de Gestión Ambiental (SGA)"},
+{tm:"T5",t:3,af:"El Sistema de Gestión Ambiental de la Personería de Bogotá se basa en la norma ISO 14001.",
+rz:"El SGA busca controlar las actividades, servicios y productos de la entidad que pueden afectar el ambiente y reducir sus impactos de forma continua.",a:1,
+e:"Ambas son verdaderas según la intranet. Pero la finalidad de controlar y reducir impactos no explica por qué se eligió la ISO 14001 como referente; es el propósito de cualquier SGA.",f:"Intranet Personería – Sistema de Gestión Ambiental (SGA)"},
+
+/* ───────── T6 · Manual Específico de Funciones (Res. 1567-10000-2026 / 08-MN-001) ───────── */
+{tm:"T6",t:1,q:"La versión del Manual Específico de Funciones y de Competencias Laborales publicada en 2026 por la Personería se identifica con:",
+o:["Código 08-MN-001, versión 14, vigente desde el 4 de mayo de 2026","Código 08-MN-01, versión 12, vigente desde el 31 de enero de 2024","Código 01-PL-012, versión 4, vigente desde el 29 de enero de 2026","Código 03-PL-01, versión 6, vigente desde enero de 2026"],
+e:"Las fichas del manual 2026 llevan código 08-MN-001, versión 14, vigente desde el 04/05/2026 (994 páginas). La versión 12 (08-MN-01) regía desde el 31/01/2024. 01-PL-012 es el PEI y 03-PL-01 el PETI.",f:"Manual 08-MN-001 v14; manual 08-MN-01 v12"},
+{tm:"T6",t:1,q:"¿Cuál de las siguientes NO es una competencia comportamental COMÚN a todos los servidores públicos según el Decreto 815 de 2018?",
+o:["Aporte técnico-profesional","Aprendizaje continuo","Orientación al usuario y al ciudadano","Adaptación al cambio"],
+e:"Las comunes son: aprendizaje continuo, orientación a resultados, orientación al usuario y al ciudadano, compromiso con la organización, trabajo en equipo y adaptación al cambio. El aporte técnico-profesional es del nivel profesional.",f:"Dec. 1083/2015, art. 2.2.4.7 (Dec. 815/2018)"},
+{tm:"T6",t:2,q:"Sobre las competencias comportamentales por nivel (Decreto 815 de 2018):",
+s:["Relaciones interpersonales es una competencia del nivel profesional.","Instrumentación de decisiones es una competencia del nivel profesional.","Colaboración es una competencia del nivel profesional.","Para profesionales con personal a cargo se agregan dirección y desarrollo de personal, y toma de decisiones."],a:2,
+e:"Nivel profesional: aporte técnico-profesional, comunicación efectiva, gestión de procedimientos e instrumentación de decisiones; con personal a cargo se suman dirección y desarrollo de personal y toma de decisiones. Relaciones interpersonales y colaboración son del nivel asistencial.",f:"Dec. 1083/2015, art. 2.2.4.8"},
+{tm:"T6",t:1,q:"¿Cuál de las siguientes denominaciones NO es un nivel jerárquico de los empleos territoriales según el Decreto 785 de 2005?",
+o:["Ejecutivo","Asesor","Profesional","Asistencial"],
+e:"Los niveles son directivo, asesor, profesional, técnico y asistencial. El «ejecutivo» existió en regímenes anteriores.",f:"Dec. Ley 785/2005, art. 3"},
+{tm:"T6",t:1,q:"Según la nomenclatura del Decreto 785 de 2005, el empleo de Profesional Especializado se identifica con el código:",
+o:["222","219","314","407"],
+e:"222: profesional especializado; 219: profesional universitario; 314: técnico operativo; 407: auxiliar administrativo.",f:"Dec. Ley 785/2005, art. 20"},
+{tm:"T6",t:3,af:"El Manual Específico de Funciones de la Personería puede ser actualizado mediante resolución del jefe de la entidad.",
+rz:"Las funciones de los empleos de la Personería están fijadas directamente en la Constitución Política.",a:2,
+e:"El manual se adopta y modifica por acto administrativo del jefe de la entidad, como ocurrió con la Resolución 1567-10000-2026. Las funciones de los empleos no están en la Constitución; el art. 122 exige que estén detalladas en ley o reglamento.",f:"CP art. 122; Dec. Ley 785/2005, art. 32"},
+{tm:"T6",t:1,q:"¿Qué elemento de la ficha de un empleo describe, en una sola frase, la razón de ser del cargo?",
+o:["El propósito principal","Los conocimientos básicos o esenciales","Las equivalencias entre estudios y experiencia","Las competencias comportamentales"],
+e:"El propósito principal expresa la razón de ser del empleo; las funciones esenciales lo desarrollan.",f:"Guía DAFP de manuales de funciones"},
+{tm:"T6",t:2,q:"Sobre la Resolución 1567-10000-2026 y el contenido del manual:",
+s:["Actualiza el Manual Específico de Funciones y de Competencias Laborales de los empleos de la planta de la Personería.","Fue expedida por el Departamento Administrativo del Servicio Civil Distrital.","Cada ficha describe funciones esenciales, conocimientos básicos, competencias y requisitos de estudio y experiencia.","El manual crea empleos y fija su asignación básica mensual."],a:1,
+e:"Verdaderas 1 y 3. La expide la propia Personería; el DASCD emite conceptos técnicos. Crear empleos y fijar la escala corresponde al Concejo (como hizo el Acuerdo 978), no al manual.",f:"Anexo técnico del concurso; Acuerdo 978/2025"},
+
+/* ───────── T7 · Labores y responsabilidades del nivel profesional y asistencial ───────── */
+{tm:"T7",t:1,q:"Según el Decreto 785 de 2005, el nivel profesional agrupa los empleos cuya naturaleza demanda:",
+o:["La ejecución y aplicación de los conocimientos propios de una carrera profesional reconocida por la ley, a los que según su complejidad pueden corresponder funciones de coordinación, supervisión y control de áreas internas","Asistir, aconsejar y asesorar directamente a los empleados de la alta dirección","Actividades de apoyo y complementarias de las tareas de los niveles superiores","El desarrollo de procesos y procedimientos en labores técnicas misionales y de apoyo"],
+e:"Es la definición del nivel profesional (art. 4). La segunda corresponde al nivel asesor, la tercera al asistencial y la cuarta al técnico.",f:"Dec. Ley 785/2005, art. 4"},
+{tm:"T7",t:1,q:"El nivel asistencial comprende los empleos cuyas funciones implican:",
+o:["Actividades de apoyo y complementarias de las tareas propias de los niveles superiores o labores de predominio manual o simple ejecución","Formulación de políticas institucionales y adopción de planes","Aplicación de conocimientos de una carrera profesional con funciones de coordinación","Asesoría directa a la alta dirección territorial"],
+e:"Definición del nivel asistencial del Decreto 785 de 2005.",f:"Dec. Ley 785/2005, art. 4"},
+{tm:"T7",t:3,af:"Un profesional especializado de la Personería puede, según la complejidad del empleo, ejercer funciones de coordinación y supervisión de grupos internos.",
+rz:"El Decreto 785 de 2005 prevé que a los empleos del nivel profesional les pueden corresponder funciones de coordinación, supervisión y control de áreas internas.",a:0,
+e:"La razón es precisamente el fundamento normativo de la afirmación.",f:"Dec. Ley 785/2005, art. 4"},
+{tm:"T7",t:1,q:"Como agente del Ministerio Público en una audiencia de proceso verbal abreviado ante un inspector de policía, usted advierte que no se ha permitido al presunto infractor presentar descargos. Lo procedente es:",
+o:["Intervenir solicitando que se garantice el derecho de defensa y el debido proceso, dejar constancia y, si la irregularidad persiste, dar traslado a la autoridad disciplinaria","Asumir la dirección de la audiencia y conceder directamente el uso de la palabra","Declarar la nulidad de lo actuado por violación del debido proceso","Abstenerse de intervenir, porque el Ministerio Público solo actúa en procesos judiciales"],
+e:"El Ministerio Público interviene para la defensa del orden jurídico y las garantías fundamentales (DL 1421, art. 99 num. 2; Acuerdo 978, art. 39), pero no dirige la audiencia ni decreta nulidades. El art. 223 de la Ley 1801 prevé los descargos en el proceso verbal abreviado.",f:"CP art. 29; Ley 1801/2016, art. 223; Acuerdo 978/2025, art. 39"},
+{tm:"T7",t:1,q:"Una ciudadana presenta verbalmente una petición en la ventanilla de atención. El servidor asistencial que la atiende debe:",
+o:["Recibirla, dejar constancia y darle trámite, pues la petición verbal es válida","Exigirle que la presente por escrito como requisito de admisión","Negarse a recibirla si no cita la norma que consagra su derecho","Recibirla solo si aporta un apoderado abogado"],
+e:"Las peticiones pueden presentarse verbalmente, por escrito o por cualquier medio idóneo (Ley 1755, art. 15). No se exige abogado ni citar normas, y la falta de fundamentación no permite rechazarla.",f:"Ley 1437/2011, arts. 15-16 (Ley 1755/2015)"},
+{tm:"T7",t:2,q:"Sobre los deberes de todo servidor público (Ley 1952 de 2019, art. 38):",
+s:["Cumplir y hacer cumplir los deberes contenidos en la Constitución, los tratados de DD.HH. y DIH, las leyes y los reglamentos.","Puede usar los bienes de la entidad para fines particulares si los restituye en buen estado.","Dedicar la totalidad del tiempo reglamentario de trabajo al desempeño de las funciones encomendadas.","Puede delegar en contratistas funciones de dirección y decisión propias del empleo."],a:1,
+e:"Verdaderas 1 y 3. Los bienes deben usarse exclusivamente para las funciones del cargo, y la delegación de funciones de decisión en contratistas está proscrita.",f:"Ley 1952/2019, art. 38"},
+{tm:"T7",t:1,q:"Una profesional elabora un concepto jurídico técnicamente sustentado, con alternativas y riesgos, que permite a su jefe decidir. ¿Qué competencia comportamental del nivel profesional se evidencia principalmente?",
+o:["Aporte técnico-profesional","Manejo de la información","Visión estratégica","Confiabilidad técnica"],
+e:"Aporte técnico-profesional es poner a disposición de la entidad saberes técnicos para resolver asuntos complejos. Manejo de la información es del nivel asistencial; visión estratégica, del directivo; confiabilidad técnica, del asesor.",f:"Dec. 1083/2015, art. 2.2.4.8"},
+{tm:"T7",t:3,af:"El nivel asistencial puede apoyar el manejo de expedientes y la radicación de comunicaciones de la dependencia.",
+rz:"Al nivel asistencial le corresponde adoptar las decisiones de fondo en las actuaciones misionales de la dependencia.",a:2,
+e:"El nivel asistencial cumple funciones de apoyo y complementarias. Las decisiones de fondo corresponden a niveles directivos o a quienes tengan la competencia asignada.",f:"Dec. Ley 785/2005, art. 4"}
+];
+
+/* Banco de preguntas — Parte 2: función pública, petición, datos, transparencia, anticorrupción, integridad, archivo */
+const Q2 = [
+/* ───────── T8 · Principios constitucionales, derechos fundamentales y función pública ───────── */
+{tm:"T8",t:1,q:"¿Cuál de los siguientes NO figura entre los principios de la función administrativa enunciados en el artículo 209 de la Constitución?",
+o:["Progresividad","Moralidad","Celeridad","Publicidad"],
+e:"El art. 209 enumera igualdad, moralidad, eficacia, economía, celeridad, imparcialidad y publicidad. La progresividad es un principio de los derechos sociales, no del art. 209.",f:"CP art. 209"},
+{tm:"T8",t:1,q:"Según el artículo 6 de la Constitución, los servidores públicos son responsables:",
+o:["Por infringir la Constitución y las leyes, y por omisión o extralimitación en el ejercicio de sus funciones","Únicamente por infringir la Constitución y las leyes, igual que los particulares","Solo por las conductas dolosas que causen daño patrimonial al Estado","Por las omisiones, pero no por la extralimitación cuando actúan de buena fe"],
+e:"Los particulares responden solo por infringir la Constitución y las leyes; los servidores responden además por omisión o extralimitación.",f:"CP art. 6"},
+{tm:"T8",t:1,q:"Según el artículo 125 de la Constitución, los empleos son de carrera, SALVO los siguientes. ¿Cuál NO es una excepción constitucional a la carrera?",
+o:["Los empleos provistos mediante nombramiento provisional","Los de elección popular","Los de libre nombramiento y remoción","Los de trabajadores oficiales"],
+e:"La provisionalidad es una forma transitoria de proveer un empleo que sigue siendo de carrera; no es una excepción. Las excepciones son los empleos de elección popular, libre nombramiento y remoción, trabajadores oficiales y los demás que determine la ley.",f:"CP art. 125"},
+{tm:"T8",t:2,q:"Sobre los derechos de aplicación inmediata enumerados en el artículo 85 de la Constitución:",
+s:["El derecho de petición (art. 23) es de aplicación inmediata.","El derecho a la vivienda digna (art. 51) está enumerado como de aplicación inmediata.","El debido proceso (art. 29) es de aplicación inmediata.","El derecho a la recreación (art. 52) está enumerado como de aplicación inmediata."],a:1,
+e:"El art. 85 incluye, entre otros, los arts. 11 a 21, 23, 24, 26 a 31, 33, 34, 37 y 40. Los arts. 51 y 52 no están en ese listado. Verdaderas 1 y 3.",f:"CP art. 85"},
+{tm:"T8",t:3,af:"La acción de tutela puede proceder contra particulares encargados de la prestación de un servicio público.",
+rz:"El artículo 86 de la Constitución defiere a la ley establecer los casos de tutela contra particulares que presten servicios públicos, cuya conducta afecte grave y directamente el interés colectivo, o respecto de quienes el solicitante esté en subordinación o indefensión.",a:0,
+e:"La razón es el fundamento constitucional de la afirmación (desarrollado por el art. 42 del Decreto 2591 de 1991).",f:"CP art. 86; Dec. 2591/1991, art. 42"},
+{tm:"T8",t:1,q:"Notificado el fallo de primera instancia en una acción de tutela, el término para impugnarlo es:",
+o:["Tres días siguientes a su notificación","Cinco días siguientes a su notificación","Diez días hábiles siguientes a su notificación","Un mes, contado desde la ejecutoria"],
+e:"El art. 31 del Decreto 2591 fija tres días. El juez dispone de diez días para fallar desde la solicitud (art. 29).",f:"Dec. 2591/1991, arts. 29 y 31"},
+{tm:"T8",t:1,q:"El artículo 122 de la Constitución establece que ningún servidor público entrará a ejercer su cargo sin:",
+o:["Prestar juramento de cumplir y defender la Constitución y desempeñar los deberes que le incumben","Haber superado un concurso público de méritos","Contar con aprobación previa de la Procuraduría","Presentar certificado de antecedentes fiscales de los últimos diez años"],
+e:"Art. 122: juramento de cumplir y defender la Constitución. El mismo artículo exige que todo empleo tenga funciones detalladas en ley o reglamento.",f:"CP art. 122"},
+{tm:"T8",t:1,q:"Según el artículo 118 de la Constitución, el Ministerio Público lo ejercen las siguientes autoridades, EXCEPTO:",
+o:["El Contralor General de la República","El Procurador General de la Nación","El Defensor del Pueblo","Los personeros municipales"],
+e:"El art. 118 menciona al Procurador, al Defensor del Pueblo, a procuradores delegados, agentes del Ministerio Público ante autoridades jurisdiccionales, personeros municipales y demás funcionarios que determine la ley. La Contraloría ejerce control fiscal.",f:"CP art. 118"},
+{tm:"T8",t:3,af:"Los personeros pueden interponer la acción de tutela.",
+rz:"El artículo 49 del Decreto 2591 de 1991 permite al personero, por delegación expresa del Defensor del Pueblo, interponer tutelas o representarlo en las que este interponga.",a:1,
+e:"Ambas son ciertas, pero la legitimación propia del personero viene del art. 10 del Decreto 2591 (y del art. 99 DL 1421), no de la delegación del art. 49, que es una hipótesis adicional. La razón no explica la afirmación.",f:"Dec. 2591/1991, arts. 10 y 49"},
+{tm:"T8",t:1,q:"Según el artículo 123 de la Constitución, son servidores públicos:",
+o:["Los miembros de las corporaciones públicas, los empleados y trabajadores del Estado y de sus entidades descentralizadas territorialmente y por servicios","Solo los empleados públicos de carrera administrativa","Los contratistas de prestación de servicios que ejerzan funciones permanentes","Los particulares que ejerzan funciones públicas de manera transitoria"],
+e:"Esa es la definición del art. 123. Los contratistas no son servidores públicos, aunque los particulares que ejercen funciones públicas responden en los términos de la ley.",f:"CP art. 123"},
+
+/* ───────── T9 · Derecho de petición y atención a la ciudadanía ───────── */
+{tm:"T9",t:1,q:"Salvo norma especial, el término general para resolver una petición es:",
+o:["Quince días hábiles siguientes a su recepción","Diez días hábiles siguientes a su recepción","Treinta días hábiles siguientes a su recepción","Quince días calendario siguientes a su radicación"],
+e:"Art. 14 CPACA (Ley 1755): regla general de 15 días; 10 días para documentos e información; 30 días para consultas.",f:"Ley 1437/2011, art. 14 (Ley 1755/2015)"},
+{tm:"T9",t:1,q:"Si una autoridad no responde dentro del término una petición de documentos, ¿qué consecuencia prevé la ley?",
+o:["Se entiende aceptada y las copias deben entregarse dentro de los tres días siguientes","Se configura silencio negativo y el peticionario debe acudir a la jurisdicción","Se prorroga automáticamente el término por diez días más","Se archiva la petición por desistimiento tácito"],
+e:"Art. 14 num. 1: si no hay respuesta en diez días, la solicitud se entiende aceptada y la administración no puede negar la entrega; las copias se entregan dentro de los tres días siguientes.",f:"Ley 1437/2011, art. 14"},
+{tm:"T9",t:1,q:"Las peticiones mediante las cuales se eleva una consulta a una autoridad en relación con las materias a su cargo deben resolverse dentro de:",
+o:["Treinta días siguientes a su recepción","Quince días siguientes a su recepción","Diez días siguientes a su recepción","Cuarenta y cinco días siguientes a su recepción"],
+e:"Art. 14 num. 2 CPACA: 30 días para consultas.",f:"Ley 1437/2011, art. 14"},
+{tm:"T9",t:2,q:"Sobre el trámite del derecho de petición (Ley 1755 de 2015):",
+s:["La autoridad puede exigir en todos los casos que la petición se presente por escrito.","El peticionario debe citar la norma que consagra su derecho como requisito de admisión.","Las peticiones de documentos se resuelven en quince días.","Si la autoridad no es competente, informa al peticionario y remite la petición al competente dentro de los cinco días siguientes al recibo, si es escrita."],a:3,
+e:"Solo la 4 es verdadera (art. 21). La petición puede ser verbal; no se exige citar normas; las de documentos se resuelven en 10 días.",f:"Ley 1437/2011, arts. 14, 15 y 21"},
+{tm:"T9",t:3,af:"La autoridad puede negarse a recibir una petición por estar incompleta o mal fundamentada.",
+rz:"El CPACA dispone que en ningún caso podrá ser rechazada una petición por motivos de fundamentación inadecuada o incompleta.",a:3,
+e:"La afirmación es falsa: si está incompleta se requiere al peticionario (art. 17), pero no se rechaza (arts. 15-16). La razón es verdadera.",f:"Ley 1437/2011, arts. 15-17"},
+{tm:"T9",t:1,q:"Cuando la autoridad requiere al peticionario para completar su solicitud y este no lo hace, se entiende que desistió si no satisface el requerimiento dentro de:",
+o:["Un mes, prorrogable por un término igual a solicitud del interesado","Diez días hábiles improrrogables","Quince días hábiles, prorrogables por cinco más","Dos meses improrrogables"],
+e:"Art. 17 CPACA: un mes, prorrogable hasta por igual término. El desistimiento se decreta por acto motivado contra el cual solo procede reposición.",f:"Ley 1437/2011, art. 17"},
+{tm:"T9",t:1,q:"Una entidad del Distrito Capital niega una solicitud de documentos invocando reserva y el peticionario insiste. ¿A quién se envía la documentación para que decida?",
+o:["Al Tribunal Administrativo con jurisdicción donde se encuentren los documentos, que decide en única instancia dentro de los diez días siguientes","Al juez administrativo del circuito, que decide en dos instancias","A la Personería de Bogotá, que resuelve la insistencia","A la Procuraduría General de la Nación, como garante de la Ley 1712"],
+e:"Art. 26 CPACA: si la autoridad es nacional, departamental o del Distrito Capital, decide el Tribunal Administrativo; si es distrital o municipal distinta, el juez administrativo. Decide en única instancia dentro de diez días.",f:"Ley 1437/2011, art. 26"},
+{tm:"T9",t:2,q:"Sobre reglas especiales del derecho de petición:",
+s:["Las autoridades dan atención prioritaria a peticiones de reconocimiento de un derecho fundamental cuando deban resolverse para evitar un perjuicio irremediable.","Las peticiones de periodistas para el ejercicio de su actividad se tramitan preferencialmente.","Toda petición debe ser respetuosa; las irrespetuosas pueden rechazarse.","Frente a peticiones reiterativas ya resueltas, la autoridad nunca puede remitirse a las respuestas anteriores."],a:0,
+e:"Verdaderas 1, 2 y 3 (arts. 19 y 20). La autoridad sí puede remitirse a respuestas anteriores en peticiones reiterativas, salvo que se trate de derechos imprescriptibles o se hayan subsanado los requisitos (art. 19).",f:"Ley 1437/2011, arts. 19-20"},
+{tm:"T9",t:1,q:"Según el Acuerdo 978 de 2025, ¿qué dependencia verifica que se cumplan los términos del derecho de petición mediante seguimiento ante terceros?",
+o:["La Dirección para la Orientación y Asistencia a las Personas","La Oficina Asesora Jurídica","La Dirección de Gestión del Conocimiento, Analítica e Innovación","La Personería Delegada para la Segunda Instancia"],
+e:"Art. 13 nums. 4 a 6: esta Dirección lidera el seguimiento a peticiones y verifica el cumplimiento de términos ante terceros.",f:"Acuerdo 978/2025, art. 13"},
+{tm:"T9",t:3,af:"Puede presentarse un derecho de petición ante una organización privada para garantizar derechos fundamentales.",
+rz:"La Ley 1755 de 2015 regula el derecho de petición ante organizaciones e instituciones privadas, con o sin personería jurídica.",a:0,
+e:"Arts. 32 y 33 del CPACA (Ley 1755). La razón explica la afirmación.",f:"Ley 1437/2011, art. 32"},
+
+/* ───────── T10 · Hábeas data y protección de datos personales ───────── */
+{tm:"T10",t:1,q:"¿Cuál de los siguientes es un dato SENSIBLE según la Ley 1581 de 2012?",
+o:["La huella dactilar registrada en un sistema biométrico de control de acceso","El cargo y la dependencia en que labora un servidor público","La dirección de correo electrónico institucional de una dependencia","La fecha de expedición de un acto administrativo publicado"],
+e:"Los datos biométricos son sensibles (art. 5). Los demás son datos públicos o semiprivados relacionados con el ejercicio de funciones o con actos publicados.",f:"Ley 1581/2012, art. 5"},
+{tm:"T10",t:1,q:"Según la Ley 1581 de 2012, no se requiere autorización del titular cuando:",
+o:["La información es requerida por una entidad pública en ejercicio de sus funciones legales o por orden judicial","Se trata de datos sensibles de salud que se usarán con fines comerciales","El responsable desea compartir la base de datos con un aliado privado","El dato se recolectó en un evento institucional y se quiere usar para publicidad"],
+e:"El art. 10 exceptúa la autorización en casos como requerimiento de entidad pública en ejercicio de funciones o por orden judicial, datos públicos, urgencia médica, fines históricos o estadísticos autorizados y datos del registro civil.",f:"Ley 1581/2012, art. 10"},
+{tm:"T10",t:2,q:"Sobre los principios del tratamiento de datos personales (art. 4, Ley 1581):",
+s:["Principio de rentabilidad.","Principio de acceso y circulación restringida.","Principio de publicidad irrestricta de las bases de datos.","Principio de confidencialidad."],a:2,
+e:"Los principios son: legalidad, finalidad, libertad, veracidad o calidad, transparencia, acceso y circulación restringida, seguridad y confidencialidad. Verdaderas 2 y 4.",f:"Ley 1581/2012, art. 4"},
+{tm:"T10",t:1,q:"La autoridad de protección de datos personales en Colombia es:",
+o:["La Superintendencia de Industria y Comercio, a través de la Delegatura para la Protección de Datos Personales","La Procuraduría General de la Nación","El Ministerio de Tecnologías de la Información y las Comunicaciones","La Agencia Nacional Digital"],
+e:"Art. 19 de la Ley 1581: la SIC ejerce la vigilancia mediante una Delegatura para la Protección de Datos Personales.",f:"Ley 1581/2012, art. 19"},
+{tm:"T10",t:1,q:"Un titular presenta un reclamo para corregir sus datos ante el responsable. El término máximo para atenderlo es:",
+o:["Quince días hábiles, prorrogables hasta ocho días hábiles más","Diez días hábiles, prorrogables hasta cinco días hábiles más","Treinta días calendario, improrrogables","Quince días calendario, prorrogables por igual término"],
+e:"Art. 15: reclamos en 15 días hábiles, prorrogables hasta 8 días hábiles. Las consultas: 10 días hábiles, prorrogables hasta 5 (art. 14).",f:"Ley 1581/2012, arts. 14-15"},
+{tm:"T10",t:3,af:"El responsable del tratamiento debe conservar prueba de la autorización otorgada por el titular.",
+rz:"La autorización debe obtenerse por cualquier medio que pueda ser objeto de consulta posterior.",a:0,
+e:"La exigencia de que la autorización pueda consultarse después explica el deber de conservar su prueba (Ley 1581, arts. 9 y 17; Dec. 1074/2015).",f:"Ley 1581/2012, arts. 9 y 17"},
+{tm:"T10",t:1,q:"La ley que regula específicamente el hábeas data financiero, crediticio y comercial es:",
+o:["La Ley 1266 de 2008","La Ley 1581 de 2012","La Ley 1712 de 2014","La Ley 1273 de 2009"],
+e:"La Ley 1266 de 2008 regula la información financiera, crediticia y comercial. La Ley 1273 tipifica delitos informáticos.",f:"Ley 1266/2008"},
+{tm:"T10",t:1,q:"Para acudir en queja ante la SIC por vulneración del régimen de datos personales, el titular debe:",
+o:["Agotar previamente el trámite de consulta o reclamo ante el responsable o encargado","Presentar primero una acción de tutela","Obtener concepto previo de la Personería","Acreditar daño patrimonial cuantificado"],
+e:"Art. 16: requisito de procedibilidad.",f:"Ley 1581/2012, art. 16"},
+{tm:"T10",t:3,af:"Un servidor puede publicar en redes sociales institucionales la lista de quejosos con sus datos de contacto para demostrar transparencia.",
+rz:"La información pública cuya divulgación cause daño a la intimidad de personas naturales puede ser exceptuada como información clasificada.",a:3,
+e:"Publicar datos de contacto de quejosos sin autorización viola la Ley 1581. La razón es verdadera (Ley 1712, art. 18).",f:"Ley 1581/2012; Ley 1712/2014, art. 18"},
+
+/* ───────── T11 · Transparencia y acceso a la información pública ───────── */
+{tm:"T11",t:1,q:"El principio de máxima publicidad para titular universal (Ley 1712) significa que:",
+o:["Toda información en posesión, bajo control o custodia de un sujeto obligado es pública y no puede reservarse o limitarse sino por disposición constitucional o legal","Toda información pública debe publicarse en redes sociales de la entidad","La información solo es pública cuando el solicitante demuestra un interés legítimo","El sujeto obligado decide discrecionalmente qué información divulgar"],
+e:"Art. 2 Ley 1712: máxima publicidad, con excepciones solo de rango constitucional o legal.",f:"Ley 1712/2014, art. 2"},
+{tm:"T11",t:1,q:"La información cuyo acceso puede rechazarse por causar daño al derecho a la intimidad de una persona natural se denomina:",
+o:["Información pública clasificada","Información pública reservada","Información pública de divulgación proactiva","Información semiprivada financiera"],
+e:"Art. 18: clasificada (daño a derechos de personas naturales o jurídicas). Art. 19: reservada (daño a intereses públicos como defensa o seguridad nacional).",f:"Ley 1712/2014, arts. 18-19"},
+{tm:"T11",t:1,q:"La reserva de las informaciones amparadas por el artículo 19 de la Ley 1712 no puede extenderse por un período mayor a:",
+o:["Quince años","Diez años","Veinte años","Treinta años"],
+e:"Art. 22 Ley 1712: máximo 15 años.",f:"Ley 1712/2014, art. 22"},
+{tm:"T11",t:2,q:"Sobre el régimen de la Ley 1712 de 2014:",
+s:["El Ministerio Público, en cabeza de la Procuraduría, es el órgano garante del derecho de acceso.","Toda solicitud de acceso debe motivarse indicando el interés del solicitante.","Los organismos de control son sujetos obligados.","La reserva de información puede mantenerse de forma indefinida."],a:1,
+e:"Verdaderas 1 y 3. No se exige motivar la solicitud y la reserva tiene límite de 15 años.",f:"Ley 1712/2014, arts. 5, 22 y 23"},
+{tm:"T11",t:3,af:"Los sujetos obligados deben publicar el directorio de sus servidores y contratistas, con la escala salarial correspondiente.",
+rz:"La Ley 1712 regula la transparencia activa: la publicación de información mínima obligatoria sin necesidad de solicitud.",a:0,
+e:"El art. 9 lit. c) exige publicar el directorio. Es un ejemplo de transparencia activa, que la razón explica.",f:"Ley 1712/2014, art. 9"},
+{tm:"T11",t:1,q:"¿Qué instrumento de gestión de información identifica la información clasificada o reservada de la entidad?",
+o:["El Índice de Información Clasificada y Reservada","El Registro de Activos de Información","El Esquema de Publicación de Información","El Programa de Gestión Documental"],
+e:"La Ley 1712 prevé tres instrumentos: Registro de Activos de Información, Índice de Información Clasificada y Reservada y Esquema de Publicación (arts. 13, 20 y 12).",f:"Ley 1712/2014, arts. 12, 13 y 20"},
+{tm:"T11",t:1,q:"Cuando un sujeto obligado niega información invocando una excepción, la carga de la prueba corresponde a:",
+o:["El sujeto obligado","El solicitante","El juez administrativo","La Procuraduría General de la Nación"],
+e:"Art. 28 Ley 1712: la carga de la prueba está en cabeza del sujeto obligado.",f:"Ley 1712/2014, art. 28"},
+{tm:"T11",t:3,af:"Una solicitud de acceso a información pública puede presentarse de forma verbal.",
+rz:"La Ley 1712 exige que toda solicitud se presente por escrito con firma del solicitante.",a:2,
+e:"La solicitud puede ser verbal, escrita o por medio electrónico (art. 25). La razón es falsa.",f:"Ley 1712/2014, art. 25"},
+{tm:"T11",t:1,q:"El deber de publicar y divulgar documentos de forma rutinaria y proactiva, más allá de lo solicitado, corresponde al principio de:",
+o:["Divulgación proactiva de la información","Calidad de la información","Gratuidad","Facilitación"],
+e:"Art. 3 Ley 1712: el principio de divulgación proactiva implica publicar sin esperar solicitudes.",f:"Ley 1712/2014, art. 3"},
+
+/* ───────── T12 · Prevención de la corrupción y control de la gestión pública ───────── */
+{tm:"T12",t:1,q:"La Ley 2195 de 2022 ordenó a las entidades públicas adoptar un instrumento que reemplaza el Plan Anticorrupción y de Atención al Ciudadano. ¿Cuál?",
+o:["El Programa de Transparencia y Ética Pública","El Plan Institucional de Capacitación","El Mapa de Aseguramiento","El Plan Anual de Adquisiciones"],
+e:"Art. 31 de la Ley 2195. En la Personería, la Dirección de Planeación dirige su consolidación (Acuerdo 978, art. 40 num. 10).",f:"Ley 2195/2022, art. 31; Acuerdo 978/2025, art. 40"},
+{tm:"T12",t:1,q:"Según el Código General Disciplinario (Ley 1952 de 2019), la sanción para las faltas gravísimas dolosas es:",
+o:["Destitución e inhabilidad general de diez a veinte años","Destitución e inhabilidad general de cinco a diez años","Suspensión en el ejercicio del cargo de tres a dieciocho meses","Multa de diez a ciento ochenta días de salario"],
+e:"Art. 48 Ley 1952: gravísimas dolosas, destitución e inhabilidad de 10 a 20 años; gravísimas con culpa gravísima, 5 a 10 años.",f:"Ley 1952/2019, art. 48"},
+{tm:"T12",t:2,q:"Sobre la reforma disciplinaria de la Ley 2094 de 2021 y su efecto institucional:",
+s:["La misma autoridad debe instruir y juzgar cada proceso disciplinario.","La reforma suprimió la doble instancia en materia disciplinaria.","Las personerías perdieron toda competencia disciplinaria.","El Acuerdo 978 de 2025 renombró las delegadas de Potestad Disciplinaria como de Instrucción y de Juzgamiento, en armonía con la separación de esas etapas."],a:3,
+e:"La Ley 2094 exige separar instrucción y juzgamiento y garantiza la doble conformidad. Las personerías conservan competencia. Solo la 4 es verdadera.",f:"Ley 2094/2021; Acuerdo 978/2025, art. 8"},
+{tm:"T12",t:1,q:"El servidor público que, abusando de su cargo, constriñe o induce a alguien a dar o prometer dinero o utilidad indebidos comete:",
+o:["Concusión","Cohecho propio","Peculado por apropiación","Tráfico de influencias de servidor público"],
+e:"Art. 404 Código Penal: concusión. En el cohecho propio el servidor recibe para retardar u omitir un acto propio del cargo.",f:"Ley 599/2000, arts. 404-405"},
+{tm:"T12",t:1,q:"¿Ante quién pueden inscribirse las veedurías ciudadanas?",
+o:["Ante las personerías municipales o distritales, o ante las cámaras de comercio","Exclusivamente ante la Registraduría Nacional","Ante la Contraloría competente, que expide su personería jurídica","Ante la Procuraduría Regional del lugar"],
+e:"Art. 3 Ley 850 de 2003.",f:"Ley 850/2003, art. 3"},
+{tm:"T12",t:3,af:"La Personería de Bogotá decide sobre la competencia preferente en procesos que adelantan las oficinas de control interno disciplinario del Distrito.",
+rz:"La Procuraduría General de la Nación puede ejercer poder disciplinario preferente incluso frente a la Personería.",a:1,
+e:"Ambas son verdaderas (Acuerdo 978, art. 42 num. 4; CP art. 277), pero el poder preferente de la PGN no explica la competencia de la Personería frente a las oficinas distritales.",f:"Acuerdo 978/2025, art. 42; CP art. 277"},
+{tm:"T12",t:1,q:"La Ley 2013 de 2019 obliga a ciertos servidores a publicar:",
+o:["La declaración de bienes y rentas, el registro de conflictos de interés y la declaración del impuesto sobre la renta","Su historia clínica ocupacional y sus evaluaciones de desempeño","Los antecedentes disciplinarios de su núcleo familiar","El listado de contratistas que supervisan y sus honorarios personales"],
+e:"La Ley 2013 de 2019 exige publicar esas tres declaraciones en el aplicativo de la Función Pública.",f:"Ley 2013/2019"},
+{tm:"T12",t:1,q:"La Ley 1474 de 2011 dispone que en toda entidad pública deberá existir por lo menos una dependencia encargada de:",
+o:["Recibir, tramitar y resolver las quejas, sugerencias y reclamos de los ciudadanos","Ejercer el control fiscal previo de los contratos","Adelantar las investigaciones penales por corrupción","Certificar la idoneidad ética de los contratistas"],
+e:"Art. 76 de la Ley 1474.",f:"Ley 1474/2011, art. 76"},
+{tm:"T12",t:2,q:"Sobre impedimentos y conflictos de interés (CPACA, art. 11):",
+s:["Cuando el interés general propio de la función entre en conflicto con un interés particular del servidor, este debe declararse impedido.","El servidor puede decidir el asunto si manifiesta verbalmente su conflicto a un compañero.","Si el servidor no manifiesta su impedimento, el interesado puede recusarlo.","Tener interés particular en la actuación no es causal de impedimento si el servidor es de carrera."],a:1,
+e:"Verdaderas 1 y 3 (arts. 11 y 12 CPACA). El impedimento se tramita formalmente ante el superior y la causal aplica a todo servidor.",f:"Ley 1437/2011, arts. 11-12"},
+
+/* ───────── T13 · Código de Integridad y valores del servicio público ───────── */
+{tm:"T13",t:1,q:"¿Cuál de los siguientes NO es uno de los cinco valores del Código de Integridad del Servicio Público?",
+o:["Lealtad institucional","Honestidad","Diligencia","Justicia"],
+e:"Los cinco valores son honestidad, respeto, compromiso, diligencia y justicia.",f:"Código de Integridad del Servicio Público (DAFP)"},
+{tm:"T13",t:1,q:"Según el PEI 2024-2028, el Código de Integridad de la Personería de Bogotá declara siete valores. Además de los cinco del Código de Integridad del Servicio Público, incluye:",
+o:["Crecimiento personal y liderazgo","Lealtad y obediencia","Eficiencia y productividad","Solidaridad y tolerancia"],
+e:"El PEI enumera honestidad, respeto, compromiso, diligencia, justicia, crecimiento personal y liderazgo como valores del Código de Integridad de la Personería.",f:"PEI 01-PL-012 v4, num. 6.5 (Valores)"},
+{tm:"T13",t:1,q:"El Distrito Capital acogió el Código de Integridad del Servicio Público mediante:",
+o:["El Decreto Distrital 118 de 2018","El Acuerdo Distrital 978 de 2025","La Ley 1474 de 2011","El Decreto Ley 1421 de 1993"],
+e:"El Decreto 118 de 2018 adoptó el Código de Integridad en el Distrito, armonizándolo con el Ideario Ético.",f:"Dec. Distrital 118/2018"},
+{tm:"T13",t:1,q:"«Cumplo con los deberes, funciones y responsabilidades asignadas a mi cargo de la mejor manera posible, con atención, prontitud, destreza y eficiencia, para optimizar el uso de los recursos del Estado». Este enunciado define el valor:",
+o:["Diligencia","Compromiso","Honestidad","Respeto"],
+e:"Esa es la definición de diligencia en el Código de Integridad.",f:"Código de Integridad"},
+{tm:"T13",t:1,q:"«Actúo con imparcialidad garantizando los derechos de las personas, con equidad, igualdad y sin discriminación». Este enunciado corresponde al valor:",
+o:["Justicia","Respeto","Diligencia","Compromiso"],
+e:"Definición de justicia. Respeto es reconocer y valorar a las personas con sus virtudes y defectos.",f:"Código de Integridad"},
+{tm:"T13",t:2,q:"Sobre los principios de acción del Código de Integridad:",
+s:["Postergar decisiones cuando no se tiene toda la información es una conducta propia de la diligencia.","Dar trato preferencial a personas cercanas es contrario a la honestidad.","Atender sin escuchar cuando se está ocupado es coherente con el respeto.","Estar dispuesto a ponerse en los zapatos de las personas es propio del compromiso."],a:2,
+e:"Verdaderas 2 y 4. La diligencia rechaza postergar sin justificación y el respeto exige atención y escucha.",f:"Código de Integridad – principios de acción"},
+{tm:"T13",t:3,af:"Los gestores de integridad sustituyen al jefe de la entidad en la responsabilidad de implementar el Código de Integridad.",
+rz:"Los gestores de integridad promueven la apropiación de los valores del servicio público en la entidad.",a:3,
+e:"La responsabilidad es de la alta dirección; los gestores apoyan y promueven la apropiación.",f:"Política de Integridad"},
+{tm:"T13",t:1,q:"Antes del Código de Integridad, el Distrito Capital orientaba la ética pública con:",
+o:["El Ideario Ético del Distrito Capital (Acuerdo 244 de 2006)","El Código Disciplinario Único (Ley 734 de 2002)","El Estatuto Anticorrupción (Ley 1474 de 2011)","El Código de Buen Gobierno de la Alcaldía Mayor"],
+e:"El Acuerdo 244 de 2006 estableció principios y valores éticos para la función pública distrital; luego se armonizó con el Código de Integridad.",f:"Acuerdo Distrital 244/2006; Dec. 118/2018"},
+{tm:"T13",t:1,q:"Un compañero le ofrece agilizar el turno de un usuario conocido a cambio de un obsequio. ¿Qué valor se vulnera principalmente?",
+o:["Honestidad","Diligencia","Compromiso","Respeto"],
+e:"La honestidad prohíbe aceptar beneficios por las funciones y dar trato preferencial.",f:"Código de Integridad"},
+
+/* ───────── T14 · Gestión documental, archivos y conservación ───────── */
+{tm:"T14",t:1,q:"El ciclo vital del documento comprende las etapas de:",
+o:["Archivo de gestión, archivo central y archivo histórico","Producción, recepción y destrucción","Archivo físico, archivo digital y nube","Radicación, distribución y respuesta"],
+e:"Ley 594 de 2000, art. 23.",f:"Ley 594/2000, art. 23"},
+{tm:"T14",t:1,q:"La Tabla de Retención Documental (TRD) es:",
+o:["El listado de series con sus subseries y tipos documentales, a los cuales se asigna el tiempo de permanencia en cada etapa del ciclo vital","El inventario de documentos que se transfieren al archivo central","El plan de digitalización de documentos históricos","El registro de comunicaciones oficiales recibidas"],
+e:"Definición del glosario archivístico del AGN.",f:"Ley 594/2000; Acuerdo AGN 027/2006"},
+{tm:"T14",t:1,q:"El principio según el cual los documentos de una entidad no deben mezclarse con los de otras se denomina:",
+o:["Principio de procedencia","Principio de orden original","Principio de disponibilidad","Principio de conservación"],
+e:"Procedencia: respetar el origen productor. Orden original: respetar el orden en que se produjeron los documentos.",f:"Glosario AGN"},
+{tm:"T14",t:2,q:"Sobre los instrumentos archivísticos del Decreto 1080 de 2015:",
+s:["El Cuadro de Clasificación Documental es un instrumento archivístico.","La Tabla de Retención Documental es un instrumento archivístico.","El Programa de Gestión Documental es un instrumento archivístico.","La matriz de riesgos de corrupción es un instrumento archivístico."],a:0,
+e:"Verdaderas 1, 2 y 3. Otros: PINAR, inventario documental, modelo de requisitos para documentos electrónicos, bancos terminológicos, tablas de control de acceso.",f:"Dec. 1080/2015, art. 2.8.2.5.8"},
+{tm:"T14",t:3,af:"Los documentos con valor histórico se conservan de manera permanente.",
+rz:"La Ley 594 de 2000 los considera parte del patrimonio documental de la Nación.",a:0,
+e:"La condición de patrimonio documental explica su conservación permanente.",f:"Ley 594/2000"},
+{tm:"T14",t:1,q:"¿Cuál NO es una forma de disposición final prevista en las TRD?",
+o:["Reciclaje inmediato a criterio del servidor","Conservación total","Selección","Eliminación"],
+e:"Las opciones de disposición final son conservación total, selección, eliminación y medios técnicos (microfilmación o digitalización).",f:"Acuerdo AGN 004/2019"},
+{tm:"T14",t:1,q:"El formato que se diligencia para inventariar y transferir documentos entre archivos es:",
+o:["El Formato Único de Inventario Documental (FUID)","El Registro de Activos de Información","La hoja de control de radicación","El formato de préstamo documental"],
+e:"El FUID es el formato estandarizado para inventarios documentales y transferencias.",f:"Acuerdo AGN 042/2002"},
+{tm:"T14",t:3,af:"Un servidor puede eliminar documentos de su dependencia cuando considere que ya no son útiles.",
+rz:"La eliminación de documentos solo procede conforme a las tablas de retención o valoración aprobadas y mediante el procedimiento con acta.",a:3,
+e:"La afirmación es falsa: eliminar sin TRD/TVD aprobadas puede constituir falta disciplinaria. La razón es verdadera.",f:"Ley 594/2000; Acuerdo AGN 004/2019"},
+{tm:"T14",t:1,q:"El ente rector de la política archivística en el Distrito Capital es:",
+o:["La Secretaría General de la Alcaldía Mayor, a través de la Dirección Distrital de Archivo de Bogotá","La Personería de Bogotá, a través de su Secretaría General","El Archivo General de la Nación, sin participación distrital","La Contraloría de Bogotá"],
+e:"La Secretaría General, mediante la Dirección Distrital de Archivo de Bogotá, lidera el Sistema Distrital de Archivos.",f:"Sistema Distrital de Archivos"}
+];
+
+/* Banco de preguntas — Parte 3: derechos humanos, enfoques, mujeres, acoso, NNA y sujetos de especial protección */
+const Q3 = [
+/* ───────── T15 · Derechos humanos y atención a víctimas del conflicto armado ───────── */
+{tm:"T15",t:1,q:"Para la Ley 1448 de 2011, son víctimas quienes hayan sufrido un daño por hechos ocurridos:",
+o:["A partir del 1 de enero de 1985, por infracciones al DIH o violaciones graves de normas internacionales de DD.HH., ocurridas con ocasión del conflicto armado interno","A partir del 1 de enero de 1991, por cualquier delito cometido en el territorio nacional","A partir de la Constitución de 1991, solo por hechos de grupos guerrilleros","Desde 1948, por cualquier hecho de violencia política"],
+e:"Art. 3 Ley 1448. Quienes sufrieron hechos antes de 1985 tienen derecho a verdad, medidas simbólicas y garantías de no repetición, pero no a reparación económica.",f:"Ley 1448/2011, art. 3"},
+{tm:"T15",t:1,q:"La restitución de tierras de la Ley 1448 aplica a despojos o abandonos ocurridos:",
+o:["Entre el 1 de enero de 1991 y el término de vigencia de la ley","Entre el 1 de enero de 1985 y 2011","Desde 1948, por cualquier causa","Solo a partir de la expedición de la ley"],
+e:"Art. 75: la fecha de corte para restitución es el 1 de enero de 1991.",f:"Ley 1448/2011, art. 75"},
+{tm:"T15",t:1,q:"Para hechos victimizantes posteriores a la vigencia de la Ley 1448, el término para rendir la declaración ante el Ministerio Público es:",
+o:["Dos años contados a partir de la ocurrencia del hecho","Cuatro años contados desde la vigencia de la ley","Seis meses contados desde el hecho","Un año contado desde la denuncia penal"],
+e:"Art. 155: cuatro años para hechos anteriores y dos años desde la ocurrencia para los posteriores. Vencido el término, el Ministerio Público indaga barreras de acceso (Acuerdo 978, art. 36 num. 3).",f:"Ley 1448/2011, art. 155"},
+{tm:"T15",t:2,q:"Sobre las medidas de reparación integral de la Ley 1448:",
+s:["La restitución es una medida de reparación.","La condonación de deudas tributarias nacionales es una medida autónoma de reparación.","La satisfacción es una medida de reparación.","La reparación integral excluye las garantías de no repetición."],a:1,
+e:"La reparación comprende restitución, indemnización, rehabilitación, satisfacción y garantías de no repetición (art. 69). Verdaderas 1 y 3.",f:"Ley 1448/2011, arts. 25 y 69"},
+{tm:"T15",t:1,q:"El Registro Único de Víctimas (RUV) es administrado por:",
+o:["La Unidad para la Atención y Reparación Integral a las Víctimas","La Personería de Bogotá","La Defensoría del Pueblo","La Registraduría Nacional del Estado Civil"],
+e:"Art. 154: lo administra la Unidad para las Víctimas. El Ministerio Público recibe las declaraciones y las remite.",f:"Ley 1448/2011, art. 154"},
+{tm:"T15",t:3,af:"Los miembros de grupos armados organizados al margen de la ley no son considerados víctimas, salvo los niños, niñas y adolescentes desvinculados siendo menores de edad.",
+rz:"La Ley 1448 de 2011 consagra expresamente esa exclusión y esa excepción.",a:0,
+e:"Art. 3 parágrafo 2 de la Ley 1448. La razón explica la afirmación.",f:"Ley 1448/2011, art. 3 par. 2"},
+{tm:"T15",t:1,q:"En virtud del principio de buena fe de la Ley 1448, la víctima puede acreditar el daño:",
+o:["Por cualquier medio legalmente aceptado; basta la prueba sumaria para que la autoridad la releve de la carga de la prueba","Únicamente con sentencia penal condenatoria contra el victimario","Mediante certificación de la Fiscalía de que existe denuncia","Con declaración extrajuicio ante notario y dos testigos"],
+e:"Art. 5: el Estado presume la buena fe; basta prueba sumaria.",f:"Ley 1448/2011, art. 5"},
+{tm:"T15",t:1,q:"En Bogotá, la secretaría técnica de la Mesa Distrital de Participación Efectiva de Víctimas la ejerce:",
+o:["La Personería de Bogotá, a través de la Delegada para la Protección de las Víctimas","La Alta Consejería para la Paz, las Víctimas y la Reconciliación","La Unidad para las Víctimas, dirección territorial","El Concejo de Bogotá"],
+e:"Art. 193 de la Ley 1448 asigna a las personerías la secretaría técnica de las mesas municipales y distritales; el Acuerdo 978, art. 36 num. 7, la asigna a la Delegada para las Víctimas.",f:"Ley 1448/2011, art. 193; Acuerdo 978/2025, art. 36"},
+{tm:"T15",t:1,q:"El principio del DIH que obliga a diferenciar en todo momento entre combatientes y población civil es el de:",
+o:["Distinción","Proporcionalidad","Necesidad militar","Humanidad"],
+e:"Distinción. La proporcionalidad prohíbe ataques cuyo daño civil incidental sea excesivo frente a la ventaja militar.",f:"Protocolo I Adicional, art. 48"},
+{tm:"T15",t:3,af:"Las personerías reciben declaraciones de víctimas para su valoración e inclusión en el RUV.",
+rz:"La Unidad para las Víctimas delegó en las personerías la decisión de inclusión en el registro.",a:2,
+e:"El Ministerio Público recibe la declaración y la remite (art. 155), pero la decisión de inclusión es de la Unidad para las Víctimas (art. 156). La razón es falsa.",f:"Ley 1448/2011, arts. 155-156"},
+
+/* ───────── T16 · Enfoque diferencial, de género e interseccional ───────── */
+{tm:"T16",t:1,q:"El enfoque diferencial, según la Ley 1448 de 2011, reconoce que:",
+o:["Hay poblaciones con características particulares en razón de su edad, género, orientación sexual o situación de discapacidad, que requieren medidas específicas","Todas las personas deben recibir exactamente el mismo trato sin ninguna distinción","Solo las comunidades étnicas tienen derecho a medidas especiales","Las medidas especiales se aplican únicamente por orden judicial"],
+e:"Art. 13 Ley 1448. El enfoque diferencial busca la igualdad material mediante medidas específicas.",f:"Ley 1448/2011, art. 13"},
+{tm:"T16",t:1,q:"El enfoque interseccional permite:",
+o:["Analizar cómo confluyen varias categorías de discriminación (género, etnia, edad, discapacidad, clase) y generan experiencias específicas de desigualdad","Sumar aritméticamente las discriminaciones como si fueran independientes","Priorizar siempre la categoría de género sobre las demás","Atender exclusivamente a mujeres víctimas de violencia sexual"],
+e:"La interseccionalidad examina la interacción de factores, no su suma separada.",f:"Doctrina sobre enfoque interseccional"},
+{tm:"T16",t:1,q:"El fundamento constitucional de las acciones afirmativas en favor de grupos discriminados o marginados se encuentra en:",
+o:["El artículo 13, que ordena promover condiciones para que la igualdad sea real y efectiva","El artículo 209, que regula la función administrativa","El artículo 125, que regula la carrera administrativa","El artículo 86, que regula la acción de tutela"],
+e:"El art. 13 inciso 2 ordena adoptar medidas en favor de grupos discriminados o marginados.",f:"CP art. 13"},
+{tm:"T16",t:2,q:"Sobre igualdad y no discriminación:",
+s:["Las acciones afirmativas son contrarias al artículo 13 de la Constitución.","La Ley 581 de 2000 regula la participación de las mujeres en los niveles decisorios del poder público.","La interseccionalidad consiste en sumar discriminaciones independientes.","La Ley 1482 de 2011 sanciona penalmente actos de discriminación y hostigamiento."],a:2,
+e:"Verdaderas 2 y 4. Las acciones afirmativas desarrollan el art. 13 y la interseccionalidad analiza la interacción de categorías.",f:"Ley 581/2000; Ley 1482/2011"},
+{tm:"T16",t:3,af:"Las acciones afirmativas son compatibles con el principio de igualdad.",
+rz:"El artículo 13 de la Constitución ordena al Estado adoptar medidas en favor de grupos discriminados o marginados.",a:0,
+e:"El propio art. 13 legitima las acciones afirmativas como medio de igualdad material.",f:"CP art. 13"},
+{tm:"T16",t:1,q:"Según el Acuerdo 978 de 2025, la Delegada para la Defensa y Protección de DD.HH. II verifica las acciones con enfoque diferencial respecto de varias poblaciones. ¿Cuál NO está mencionada?",
+o:["Personas pensionadas del sector público","Pueblo Rrom gitano","Habitantes de calle","Personas migrantes"],
+e:"Art. 34 num. 2: población LGBTI, sector interreligioso, pueblos indígenas, comunidades NARP, pueblo Rrom, habitantes de calle, migrantes, trabajadores sexuales y demás población vulnerable.",f:"Acuerdo 978/2025, art. 34"},
+{tm:"T16",t:1,q:"El enfoque de género en la gestión pública consiste en:",
+o:["Analizar las relaciones de poder y las desigualdades construidas socialmente entre los géneros para orientar acciones que las corrijan","Atender exclusivamente a las mujeres","Asignar cuotas de contratación por sexo en todos los empleos","Usar el lenguaje masculino genérico en todos los documentos"],
+e:"El enfoque de género es una herramienta de análisis de desigualdades de poder.",f:"Política Pública de Mujeres y Equidad de Género"},
+{tm:"T16",t:1,q:"Una persona trans pide en la ventanilla de atención ser llamada por su nombre identitario, distinto al de su documento. El servidor debe:",
+o:["Respetar su identidad de género y usar el nombre con el que se identifica, registrando el dato del documento solo donde sea legalmente necesario","Usar el nombre del documento porque es el único jurídicamente válido","Exigirle que primero corrija su registro civil","Remitirla a otra dependencia especializada"],
+e:"La jurisprudencia constitucional protege la identidad de género y el trato digno; el uso del nombre identitario no impide registrar el dato legal donde se requiera.",f:"Corte Constitucional, línea sobre identidad de género (p. ej., T-063/2015)"},
+
+/* ───────── T17 · Prevención, atención y sanción de violencias y discriminación contra las mujeres ───────── */
+{tm:"T17",t:1,q:"La Ley 1257 de 2008 define la violencia contra la mujer como:",
+o:["Cualquier acción u omisión que le cause muerte, daño o sufrimiento físico, sexual, psicológico, económico o patrimonial por su condición de mujer, así como amenazas, coacción o privación arbitraria de la libertad, en el ámbito público o privado","Únicamente las agresiones físicas cometidas por la pareja en el hogar","Las conductas tipificadas como delito que dejen secuelas médicas","Las agresiones cometidas en el ámbito laboral"],
+e:"Art. 2 Ley 1257: definición amplia que comprende varios tipos de daño, en el ámbito público y privado.",f:"Ley 1257/2008, art. 2"},
+{tm:"T17",t:1,q:"¿Cuál NO es un tipo de daño contra la mujer definido en la Ley 1257 de 2008?",
+o:["Daño reputacional corporativo","Daño psicológico","Daño sexual","Daño patrimonial"],
+e:"Art. 3: daño psicológico, físico, sexual y patrimonial.",f:"Ley 1257/2008, art. 3"},
+{tm:"T17",t:1,q:"El feminicidio fue tipificado como delito autónomo por:",
+o:["La Ley 1761 de 2015 (Ley Rosa Elvira Cely)","La Ley 1257 de 2008","La Ley 1719 de 2014","La Ley 2365 de 2024"],
+e:"La Ley 1761 creó el art. 104A del Código Penal. La 1719 trata de violencia sexual en el conflicto armado.",f:"Ley 1761/2015"},
+{tm:"T17",t:2,q:"Sobre las medidas de protección para mujeres víctimas de violencia:",
+s:["Puede ordenarse al agresor el desalojo de la casa de habitación.","Puede prohibirse al agresor acercarse a la víctima.","Puede ordenarse al agresor un tratamiento reeducativo y terapéutico.","Puede exigirse a la víctima conciliar con el agresor como requisito para recibir protección."],a:0,
+e:"Verdaderas 1, 2 y 3 (art. 17 Ley 1257). La víctima tiene derecho a no ser confrontada con el agresor y no puede condicionarse su protección a una conciliación.",f:"Ley 1257/2008, arts. 8 y 17"},
+{tm:"T17",t:3,af:"La mujer víctima de violencia tiene derecho a no ser confrontada con su agresor.",
+rz:"La conciliación es requisito obligatorio de procedibilidad en los asuntos de violencia contra la mujer.",a:2,
+e:"El derecho a no ser confrontada está en el art. 8 de la Ley 1257. La razón es falsa: la ley protege a la víctima frente a mecanismos que impliquen confrontación.",f:"Ley 1257/2008, art. 8"},
+{tm:"T17",t:1,q:"La autoridad administrativa competente para adoptar medidas de protección en casos de violencia en el contexto familiar es:",
+o:["La Comisaría de Familia","La Personería Local","La Inspección de Tránsito","La Oficina de Control Interno Disciplinario"],
+e:"Ley 294 de 1996 y Ley 2126 de 2021. La Personería vigila el cumplimiento de las rutas.",f:"Ley 294/1996; Ley 2126/2021"},
+{tm:"T17",t:1,q:"La línea distrital de Bogotá que brinda atención psicosocial a mujeres víctimas de violencias es:",
+o:["Línea Púrpura Distrital «Mujeres que escuchan mujeres»","Línea 141 del ICBF","Línea 195 de servicios de la Alcaldía","Línea 106 de escucha a niños, niñas y adolescentes"],
+e:"La Línea Púrpura Distrital, de la Secretaría de la Mujer, atiende a mujeres. La 141 es del ICBF para NNA.",f:"Secretaría Distrital de la Mujer"},
+{tm:"T17",t:1,q:"El instrumento interamericano específico sobre violencia contra la mujer es:",
+o:["La Convención de Belém do Pará","La CEDAW","El Pacto de San José","La Convención de Palermo"],
+e:"La Convención Interamericana para Prevenir, Sancionar y Erradicar la Violencia contra la Mujer (Belém do Pará, 1994). La CEDAW es del sistema universal.",f:"Ley 248/1995"},
+{tm:"T17",t:1,q:"Según la Ley 1257 de 2008, ¿qué conducta encaja en la noción de violencia económica?",
+o:["El control abusivo de las finanzas de la mujer o las recompensas y castigos monetarios por su condición de mujer","Un despido masivo por reestructuración de planta","Una deuda comercial pactada libremente","El cobro de impuestos de un predio"],
+e:"Art. 2: violencia económica incluye el abuso económico, el control abusivo de las finanzas y recompensas o castigos monetarios.",f:"Ley 1257/2008, art. 2"},
+
+/* ───────── T18 · Prevención, protección y atención del acoso sexual en el ámbito laboral ───────── */
+{tm:"T18",t:1,q:"La Ley 2365 de 2024 define el acoso sexual como:",
+o:["Todo acto de persecución, hostigamiento o asedio de carácter o connotación sexual, lasciva o libidinosa, que se manifieste por relaciones de poder de orden vertical u horizontal","Únicamente el acceso carnal violento cometido en el lugar de trabajo","Cualquier conflicto interpersonal entre compañeros de trabajo","La conducta de un superior que asigna cargas excesivas de trabajo"],
+e:"Art. 2 Ley 2365. El acoso puede ser vertical u horizontal y no requiere jerarquía.",f:"Ley 2365/2024, art. 2"},
+{tm:"T18",t:1,q:"Según la Ley 2365 de 2024, se presume que el acoso sexual ocurrió en el contexto laboral cuando se comete:",
+o:["En los trayectos entre el domicilio y el lugar de trabajo, por una persona que hace parte del contexto laboral","Únicamente dentro de la sede física de la entidad, en horario laboral","Solo cuando agresor y víctima tienen el mismo empleador","Solo cuando existe una relación jerárquica directa"],
+e:"Art. 3: la ley incluye los trayectos y el alojamiento suministrado por el empleador, entre otros lugares.",f:"Ley 2365/2024, art. 3"},
+{tm:"T18",t:3,af:"Para que la entidad avoque competencia frente a un caso de acoso sexual no se exige acreditar una relación laboral o contractual entre la víctima y quien cometió el acoso.",
+rz:"La Ley 2365 de 2024 dispone expresamente que en ningún caso se debe acreditar esa relación como requisito.",a:0,
+e:"Art. 3 Ley 2365. La razón explica la afirmación.",f:"Ley 2365/2024, art. 3"},
+{tm:"T18",t:1,q:"El acoso sexual como delito está tipificado en:",
+o:["El artículo 210A del Código Penal","La Ley 1010 de 2006","La Ley 2365 de 2024, como contravención","El Código Nacional de Seguridad y Convivencia"],
+e:"El art. 210A del Código Penal tipifica el acoso sexual. La Ley 2365 regula medidas de prevención, protección y atención; la Ley 1010, el acoso laboral.",f:"Ley 599/2000, art. 210A"},
+{tm:"T18",t:2,q:"Sobre el acoso laboral (Ley 1010 de 2006):",
+s:["Sus modalidades incluyen maltrato, persecución, discriminación, entorpecimiento, inequidad y desprotección laboral.","El Comité de Convivencia Laboral impone sanciones disciplinarias al acosador.","Excepcionalmente, un solo acto hostil puede bastar para acreditar el acoso laboral.","La Ley 1010 es la única norma aplicable a los casos de acoso sexual."],a:1,
+e:"Verdaderas 1 y 3 (arts. 2 y 7). El comité promueve conciliación y medidas preventivas, no sanciona. El acoso sexual tiene regulación propia (Ley 2365, art. 210A CP).",f:"Ley 1010/2006, arts. 2 y 7"},
+{tm:"T18",t:1,q:"Según la Ley 2365 de 2024, las personas investigadas por presunto acoso sexual tienen derecho a:",
+o:["El debido proceso, la presunción de inocencia y la defensa","Ser sancionadas de inmediato sin investigación","Que la víctima sea confrontada con ellas en audiencia obligatoria","Que se archive la investigación si la víctima no aporta testigos"],
+e:"Art. 2 Ley 2365: las víctimas tienen derechos y las personas investigadas conservan sus garantías.",f:"Ley 2365/2024, art. 2"},
+{tm:"T18",t:1,q:"Además del contexto laboral, la Ley 2365 de 2024 regula medidas frente al acoso sexual en:",
+o:["Las instituciones de educación superior","Los establecimientos de comercio abiertos al público","Los conjuntos residenciales sometidos a propiedad horizontal","El transporte público urbano"],
+e:"El título de la ley incluye expresamente las instituciones de educación superior.",f:"Ley 2365/2024"},
+{tm:"T18",t:3,af:"La Ley 2365 de 2024 busca garantizar el derecho a la igualdad, a la no discriminación y a una vida libre de violencias.",
+rz:"El acoso sexual solo puede configurarse cuando lo comete un superior jerárquico.",a:2,
+e:"El objeto de la ley es cierto (art. 1). La razón es falsa: el acoso puede ser vertical u horizontal (art. 2).",f:"Ley 2365/2024, arts. 1-2"},
+
+/* ───────── T19 · Derechos y protección integral de niños, niñas y adolescentes ───────── */
+{tm:"T19",t:1,q:"El artículo 44 de la Constitución establece que los derechos de los niños:",
+o:["Prevalecen sobre los derechos de los demás","Se equiparan a los de los adultos sin ninguna prevalencia","Solo son exigibles a través del ICBF","Se limitan a salud y educación"],
+e:"Art. 44 CP, inciso final.",f:"CP art. 44"},
+{tm:"T19",t:1,q:"Según el Código de la Infancia y la Adolescencia, se entiende por adolescente a la persona:",
+o:["Entre los 12 y los 18 años","Entre los 14 y los 18 años","Entre los 10 y los 17 años","Menor de 21 años"],
+e:"Art. 3 Ley 1098: niño o niña, de 0 a 12 años; adolescente, de 12 a 18 años.",f:"Ley 1098/2006, art. 3"},
+{tm:"T19",t:1,q:"El Sistema de Responsabilidad Penal para Adolescentes aplica a quienes tengan, al momento de cometer el delito:",
+o:["Entre 14 y 18 años","Entre 12 y 18 años","Entre 16 y 18 años","Más de 10 años"],
+e:"Art. 139 Ley 1098. Los menores de 14 años no son juzgados ni declarados penalmente responsables (art. 142).",f:"Ley 1098/2006, arts. 139 y 142"},
+{tm:"T19",t:2,q:"Sobre los principios del Código de la Infancia y la Adolescencia:",
+s:["El interés superior del niño obliga a todas las personas a garantizar la satisfacción integral de sus derechos.","La corresponsabilidad vincula a la familia, la sociedad y el Estado.","La protección integral comprende reconocimiento, garantía, prevención de amenazas y restablecimiento de derechos.","La responsabilidad penal de los adolescentes inicia a los 12 años."],a:0,
+e:"Verdaderas 1, 2 y 3 (arts. 7, 8 y 10). La responsabilidad penal inicia a los 14 años.",f:"Ley 1098/2006, arts. 7, 8, 10 y 139"},
+{tm:"T19",t:3,af:"Una persona menor de 14 años no puede ser juzgada ni declarada responsable penalmente.",
+rz:"El Código de la Infancia y la Adolescencia lo dispone expresamente.",a:0,
+e:"Art. 142 Ley 1098. En esos casos procede el restablecimiento de derechos.",f:"Ley 1098/2006, art. 142"},
+{tm:"T19",t:1,q:"Son autoridades competentes para el restablecimiento de derechos de niños, niñas y adolescentes:",
+o:["Los defensores de familia, los comisarios de familia y, subsidiariamente, los inspectores de policía","Los personeros locales y los jueces de paz","Los alcaldes locales y los ediles","Los fiscales delegados ante jueces penales"],
+e:"Arts. 96 y 98 Ley 1098. El personero vigila la actuación de esas autoridades.",f:"Ley 1098/2006, arts. 96-98"},
+{tm:"T19",t:1,q:"La ley que creó el Sistema Nacional de Convivencia Escolar y la ruta de atención integral para la convivencia es:",
+o:["La Ley 1620 de 2013","La Ley 1098 de 2006","La Ley 115 de 1994","La Ley 2089 de 2021"],
+e:"La Ley 1620 de 2013 creó el sistema y la ruta. El Acuerdo 978 asigna a la Delegada para el Sector Educación atender situaciones de convivencia escolar.",f:"Ley 1620/2013"},
+{tm:"T19",t:1,q:"La ley que prohíbe el castigo físico y los tratos crueles, humillantes o degradantes como método de corrección de niños, niñas y adolescentes es:",
+o:["La Ley 2089 de 2021","La Ley 1257 de 2008","La Ley 1620 de 2013","La Ley 1361 de 2009"],
+e:"La Ley 2089 de 2021. La 1361 de 2009 es la ley de protección integral a la familia.",f:"Ley 2089/2021"},
+{tm:"T19",t:1,q:"Según el Acuerdo 978 de 2025, ¿qué dependencia vigila que se respeten los derechos de los NNA en centros de protección del orden distrital y en los centros del Sistema de Responsabilidad Penal para Adolescentes?",
+o:["La Personería Delegada para la Familia y Sujetos de Especial Protección Constitucional","La Personería Delegada para Asuntos Penales I","La Personería Delegada para el Sector Integración Social","La Dirección para la Orientación y Asistencia a las Personas"],
+e:"Art. 35 num. 5 del Acuerdo 978.",f:"Acuerdo 978/2025, art. 35"},
+
+/* ───────── T20 · Atención a sujetos de especial protección constitucional ───────── */
+{tm:"T20",t:1,q:"La ley que reconoce la capacidad legal plena de las personas con discapacidad mayores de edad y elimina la interdicción es:",
+o:["La Ley 1996 de 2019","La Ley 1618 de 2013","La Ley 361 de 1997","La Ley 1306 de 2009"],
+e:"La Ley 1996 de 2019 instituye el sistema de apoyos y ajustes razonables. La Ley 1306 de 2009 regulaba la interdicción y fue derogada en esa materia.",f:"Ley 1996/2019"},
+{tm:"T20",t:1,q:"Para la Ley 1251 de 2008, se considera persona adulta mayor a quien tiene:",
+o:["Sesenta años o más","Sesenta y cinco años o más","Setenta años o más","Cincuenta y siete años o más"],
+e:"Art. 3 Ley 1251 de 2008.",f:"Ley 1251/2008, art. 3"},
+{tm:"T20",t:1,q:"La ley que fija los lineamientos de la política pública social para habitantes de la calle es:",
+o:["La Ley 1641 de 2013","La Ley 1448 de 2011","La Ley 1801 de 2016","La Ley 1098 de 2006"],
+e:"La Ley 1641 de 2013 regula la política pública para habitantes de la calle.",f:"Ley 1641/2013"},
+{tm:"T20",t:2,q:"Sobre los sujetos de especial protección constitucional:",
+s:["Esa condición solo se adquiere mediante declaración judicial previa.","Las personas mayores pierden esa condición al cumplir 80 años.","La flexibilización del requisito de subsidiariedad de la tutela aplica por igual a cualquier persona.","El juez constitucional puede flexibilizar el examen de procedencia de la tutela cuando quien la presenta es sujeto de especial protección."],a:3,
+e:"Solo la 4 es verdadera. La condición deriva de la Constitución y la jurisprudencia, y la flexibilización se justifica por esa situación de vulnerabilidad.",f:"Corte Constitucional, jurisprudencia sobre procedencia de tutela"},
+{tm:"T20",t:3,af:"Toda persona con discapacidad mayor de edad es sujeto de derecho con capacidad legal plena.",
+rz:"La Ley 1996 de 2019 eliminó la interdicción e instituyó los apoyos y los ajustes razonables.",a:0,
+e:"Arts. 6 y 53 de la Ley 1996. La razón explica el cambio de modelo.",f:"Ley 1996/2019"},
+{tm:"T20",t:1,q:"Según la Convención sobre los Derechos de las Personas con Discapacidad, los ajustes razonables son:",
+o:["Modificaciones y adaptaciones necesarias y adecuadas que no impongan una carga desproporcionada o indebida","Los descuentos tributarios a empleadores que contraten personas con discapacidad","Las sanciones por discriminación contra personas con discapacidad","El cupo obligatorio de empleo público para personas con discapacidad"],
+e:"Art. 2 de la CDPD (Ley 1346 de 2009).",f:"CDPD art. 2; Ley 1346/2009"},
+{tm:"T20",t:1,q:"Es madre o padre cabeza de familia quien:",
+o:["Tiene bajo su cargo, económica o socialmente, en forma permanente, hijos menores u otras personas incapaces o en incapacidad para trabajar, ante la ausencia o deficiencia de la pareja","Es el único hijo de una persona adulta mayor","Tiene más de tres hijos, sin importar la presencia de la pareja","Es el titular de la vivienda familiar"],
+e:"Ley 82 de 1993 (modificada por la Ley 1232 de 2008).",f:"Ley 82/1993 mod. Ley 1232/2008"},
+{tm:"T20",t:1,q:"El Estatuto Temporal de Protección para Migrantes Venezolanos fue adoptado mediante:",
+o:["El Decreto 216 de 2021","La Ley 2136 de 2021","El Decreto 1067 de 2015","La Ley 1465 de 2011"],
+e:"El Decreto 216 de 2021 adoptó el Estatuto, con el Permiso por Protección Temporal (PPT). La Ley 2136 de 2021 es la política integral migratoria.",f:"Dec. 216/2021"},
+{tm:"T20",t:3,af:"Las personas privadas de la libertad son sujetos de especial protección y el Estado tiene frente a ellas una posición de garante.",
+rz:"La relación de especial sujeción con el Estado implica que algunos derechos se restringen, pero otros, como la vida y la dignidad, se mantienen intactos.",a:0,
+e:"La relación de especial sujeción explica la posición de garante. Por eso la Personería vigila el respeto de sus derechos (DL 1421, art. 101 num. 6).",f:"Corte Constitucional, T-388/2013; DL 1421, art. 101"}
+];
+
+/* Banco de preguntas — Parte 4: Resolución 180 de 2025 y PEI 2024-2028 (documentos leídos completos) */
+const Q4 = [
+/* ───────── T3 · Resolución 180 de 2025 ───────── */
+{tm:"T3",t:1,q:"La Resolución 180 de 2025 invoca un artículo constitucional que obliga a las entidades públicas a diseñar y aplicar, según la naturaleza de sus funciones, métodos y procedimientos de control interno. ¿Cuál?",
+o:["Artículo 269","Artículo 209","Artículo 118","Artículo 267"],
+e:"El art. 269 CP impone el deber de diseñar y aplicar métodos de control interno. El 209 consagra los principios de la función administrativa; el 118, la composición del Ministerio Público; el 267, el control fiscal.",f:"Res. 180/2025, considerandos; CP art. 269"},
+{tm:"T3",t:1,q:"Según la Resolución 180 de 2025, la estructura del MECI contempla dos elementos fundamentales:",
+o:["Una estructura de control basada en COSO/INTOSAI con cinco componentes y un esquema de responsabilidades de cuatro líneas de defensa","Siete dimensiones operativas y diecinueve políticas de gestión y desempeño","Tres subsistemas de control: estratégico, de gestión y de evaluación","Un plan anual de auditoría y un comité de ética"],
+e:"Art. 3: primer elemento, estructura de control COSO/INTOSAI (ambiente de control, evaluación del riesgo, actividades de control, información y comunicación, actividades de monitoreo); segundo, cuatro líneas de defensa (estratégica, primera, segunda y tercera). Las siete dimensiones son de MIPG; los tres subsistemas eran del MECI 2005.",f:"Res. 180/2025, art. 3"},
+{tm:"T3",t:1,q:"¿Quién NO hace parte de la segunda línea de defensa según la Resolución 180 de 2025?",
+o:["El Jefe de la Oficina de Control Interno","El Personero Auxiliar","El Secretario General","El Director de Planeación"],
+e:"El Jefe de la Oficina de Control Interno es la tercera línea, que hace la evaluación independiente de los controles de la primera y la segunda. La segunda línea incluye, entre otros, al Personero Auxiliar, al Secretario General, a los directores de Planeación, Administrativo y Financiero, TIC, Talento Humano, Conocimiento, a dos delegadas y a los responsables de sistemas de gestión.",f:"Res. 180/2025, art. 3"},
+{tm:"T3",t:1,q:"Según la Resolución 180 de 2025, el Comité Directivo Institucional (CDI) tiene naturaleza de:",
+o:["Órgano rector, articulador y ejecutor de las acciones, estrategias, políticas y medidas para la gestión estratégica, operativa y táctica","Instancia asesora sin capacidad decisoria, subordinada al Comité de Coordinación de Control Interno","Órgano de control disciplinario interno de los directivos","Instancia externa de evaluación conformada por la Veeduría Distrital"],
+e:"Art. 5 de la Res. 180.",f:"Res. 180/2025, art. 5"},
+{tm:"T3",t:1,q:"Al crearse el Comité Directivo Institucional, la Resolución 180 de 2025 dispuso que este:",
+o:["Sustituirá los demás comités que no sean obligatorios por mandato legal","Sustituirá también al Comité Institucional de Coordinación del Sistema de Control Interno","Funcionará solo mientras se adopta el MIPG","Reemplazará a la Comisión de Personal"],
+e:"Art. 4 parágrafo primero. Los comités obligatorios por ley, como el de Coordinación de Control Interno, se mantienen; por eso la Res. 180 los menciona juntos en la línea estratégica.",f:"Res. 180/2025, art. 4"},
+{tm:"T3",t:1,q:"En el Comité Directivo Institucional, el Jefe de la Oficina de Control Interno participa:",
+o:["Con derecho a voz, pero sin voto","Con voz y voto, como cualquier integrante","Solo como invitado ocasional, sin ser integrante","Como presidente en ausencia del Personero"],
+e:"Art. 6 num. 14. Así se preserva su independencia como tercera línea de defensa.",f:"Res. 180/2025, art. 6"},
+{tm:"T3",t:1,q:"Si en una sesión del Comité Directivo Institucional no pueden presidir ni el Personero ni el Personero Auxiliar, y no existe acto de delegación, preside:",
+o:["El Secretario General","El Director de Planeación","El Jefe de la Oficina Asesora Jurídica","El integrante de mayor antigüedad"],
+e:"Art. 11: preside el Personero; en su orden lo reemplazan el Personero Auxiliar y, ante la ausencia de ambos, el Secretario General.",f:"Res. 180/2025, art. 11"},
+{tm:"T3",t:1,q:"La Secretaría Técnica del Comité Directivo Institucional debe convocar a las sesiones con una antelación mínima de:",
+o:["Tres días","Cinco días hábiles","Diez días","Veinticuatro horas"],
+e:"Art. 14 num. 1. La ejerce el Director de Planeación o quien delegue la Presidencia (art. 13).",f:"Res. 180/2025, arts. 13-14"},
+{tm:"T3",t:2,q:"Sobre sesiones y decisiones del Comité Directivo Institucional (Res. 180 de 2025):",
+s:["Se reúne en sesión ordinaria por lo menos una vez cada trimestre.","Sesiona con la mayoría de sus integrantes y decide por mayoría de los asistentes.","En caso de empate en la votación, decide el Presidente del Comité.","Sus sesiones nunca pueden realizarse de manera no presencial."],a:0,
+e:"Verdaderas 1, 2 y 3 (art. 9). El parágrafo del art. 9 permite sesiones no presenciales por causa justificada, con la misma validez.",f:"Res. 180/2025, art. 9"},
+{tm:"T3",t:1,q:"Según la Resolución 180 de 2025, ¿qué instancia selecciona anualmente al mejor empleado de carrera de todos los niveles y dirime con criterios objetivos los empates en la selección?",
+o:["El Comité Directivo Institucional","El Comité Institucional de Coordinación del Sistema de Control Interno","La Comisión de Personal","La Oficina de Control Interno"],
+e:"Art. 8 nums. 17 y 18: el CDI selecciona anualmente a los mejores empleados de carrera, al mejor de libre nombramiento y a los mejores equipos, conforme al Plan Anual de Incentivos, y dirime empates. La Subdirección de Desarrollo del Talento Humano administra el concurso (Anexo Técnico).",f:"Res. 180/2025, art. 8"},
+{tm:"T3",t:1,q:"Según la Resolución 180 de 2025, ¿quién autoriza la aplicación de la disposición final de los documentos institucionales establecida en las TRD o TVD?",
+o:["El Comité Directivo Institucional","El Archivo General de la Nación en cada caso","El jefe de cada dependencia productora","La Oficina Asesora Jurídica"],
+e:"Art. 8 num. 20. El CDI también aprueba los instrumentos de gestión de la información pública (num. 19).",f:"Res. 180/2025, art. 8"},
+{tm:"T3",t:2,q:"Sobre los sistemas de gestión que integran el Modelo de Gestión de la Personería (Res. 180 de 2025):",
+s:["Incluye el sistema de gestión antisoborno ISO 37001.","Incluye el Sistema de Gestión de la Seguridad y Salud en el Trabajo (ISO 45001).","Incluye el sistema de continuidad del negocio ISO 22301.","Incluye el Sistema de Gestión Ambiental (ISO 14001)."],a:2,
+e:"Arts. 16 y 19: el Modelo de Gestión lo integran Calidad (ISO 9001), Seguridad y Salud en el Trabajo (ISO 45001), Seguridad de la Información (ISO 27001) y Ambiental (ISO 14001). Verdaderas 2 y 4.",f:"Res. 180/2025, arts. 16 y 19"},
+{tm:"T3",t:1,q:"El Representante de la Alta Dirección para la implementación, sostenibilidad y mejora de los sistemas de gestión de la Personería es:",
+o:["El Director de Planeación","El Personero Auxiliar","El Jefe de la Oficina de Control Interno","El Secretario General"],
+e:"Art. 21 de la Res. 180. El Director de Planeación también es responsable del SGC y del SGA y secretario técnico del CDI.",f:"Res. 180/2025, arts. 6, 21 y 22"},
+{tm:"T3",t:2,q:"Sobre los responsables de los sistemas de gestión (Res. 180 de 2025, art. 22):",
+s:["El Director de Planeación es responsable del Sistema de Gestión de la Calidad.","El Director de TIC es responsable del Sistema de Gestión de la Seguridad y Salud en el Trabajo.","El Director de Planeación es responsable del Sistema de Gestión Ambiental.","El Subdirector de Desarrollo del Talento Humano es responsable del Sistema de Seguridad de la Información."],a:1,
+e:"Verdaderas 1 y 3. El SG-SST está a cargo del Subdirector de Desarrollo del Talento Humano, con apoyo de un profesional especializado; el SGSI, del Director de TIC.",f:"Res. 180/2025, art. 22"},
+{tm:"T3",t:3,af:"La Resolución 180 de 2025 derogó en su totalidad la Resolución 250 de 2023.",
+rz:"La Resolución 180 de 2025 rige a partir de su publicación en el Diario Oficial.",a:2,
+e:"El art. 25 deroga en su totalidad la Res. 250 de 2023, pero dispone que rige a partir de su expedición (6 de mayo de 2025). La razón es falsa.",f:"Res. 180/2025, art. 25"},
+{tm:"T3",t:1,q:"Según la Resolución 180 de 2025, el Equipo Operativo del Modelo de Gestión se reúne:",
+o:["Mínimo una vez al año y cuando lo convoque el Representante de la Alta Dirección","Mínimo una vez al mes","Solo cuando lo ordene la Oficina de Control Interno","Cada trimestre, junto con el Comité Directivo Institucional"],
+e:"Art. 24 parágrafo cuarto. Lo integran el Director de Planeación, los referentes de gestión y los enlaces operativos.",f:"Res. 180/2025, art. 24"},
+{tm:"T3",t:1,q:"Según el mapa de responsables de la Resolución 180 de 2025, el responsable del proceso de Potestad Disciplinaria es:",
+o:["El Personero Auxiliar","El Personero Delegado para la Segunda Instancia","El Jefe de la Oficina de Control Disciplinario Interno","El Secretario General"],
+e:"Art. 23: el Personero Auxiliar es responsable de Potestad Disciplinaria y de Control Disciplinario Interno; los responsables operativos incluyen las delegadas de Instrucción y Juzgamiento, la Dirección de Investigaciones Especiales y la Segunda Instancia.",f:"Res. 180/2025, art. 23"},
+{tm:"T3",t:1,q:"La Resolución 180 de 2025 enmarca los lineamientos de implementación del MECI en la dimensión del MIPG denominada:",
+o:["Séptima dimensión: Control Interno","Primera dimensión: Talento Humano","Cuarta dimensión: Evaluación de Resultados","Quinta dimensión: Información y Comunicación"],
+e:"Art. 3 y considerandos: el Manual Operativo del MIPG desarrolla el control interno en su séptima dimensión.",f:"Res. 180/2025, art. 3"},
+{tm:"T3",t:1,q:"Según el objetivo del MECI citado en la Resolución 180, el principio por el cual cada servidor de la entidad se constituye en parte integral del sistema es:",
+o:["Autocontrol","Autogestión","Autorregulación","Autoevaluación"],
+e:"El objetivo del MECI asocia autogestión a los parámetros que la entidad establece, autorregulación al mejoramiento continuo mediante métodos y procedimientos, y autocontrol a que cada servidor sea parte integral del sistema.",f:"Res. 180/2025, considerandos"},
+{tm:"T3",t:3,af:"El Comité Directivo Institucional debe estudiar y adoptar las mejoras pertinentes propuestas por el Comité Institucional de Coordinación del Sistema de Control Interno.",
+rz:"La Resolución 180 de 2025 suprimió el Comité Institucional de Coordinación del Sistema de Control Interno.",a:2,
+e:"La afirmación es el num. 6 del art. 8. La razón es falsa: ese comité subsiste; la Res. 180 lo ubica en la línea estratégica junto con el CDI.",f:"Res. 180/2025, arts. 3 y 8"},
+
+/* ───────── T4 · Plan Estratégico Institucional 2024-2028 ───────── */
+{tm:"T4",t:1,q:"El Plan Estratégico Institucional 2024-2028 vigente de la Personería se identifica con:",
+o:["Código 01-PL-012, versión 4, vigente desde el 29 de enero de 2026","Código 01-PL-02, versión 6, vigente desde 2021","Código 08-MN-001, versión 14, vigente desde mayo de 2026","Código 01-PL-013, versión 1, vigente desde junio de 2024"],
+e:"El PEI es el 01-PL-012 v4 (29/01/2026). El 01-PL-02 fue el PEI 2021-2024; el 08-MN-001 es el Manual de Funciones; el 01-PL-013 es el Plan Operativo Anual por procesos.",f:"PEI 01-PL-012 v4, portada"},
+{tm:"T4",t:1,q:"Según el PEI 2024-2028, la visión de la Personería es que para 2028 será reconocida como entidad:",
+o:["Efectiva, oportuna, resolutiva y cercana a la ciudadanía, con talento humano competente, tecnologías de última generación y comprometida con los objetivos de desarrollo sostenible","Líder nacional en sanciones disciplinarias y en recaudo por multas","Cabeza del sector Gobierno de la Administración Distrital","Única autoridad de control fiscal y disciplinario del Distrito"],
+e:"Texto de la visión del PEI (num. 6.5).",f:"PEI 01-PL-012 v4, num. 6.5"},
+{tm:"T4",t:2,q:"Sobre las cuatro líneas estratégicas del PEI 2024-2028, la Personería de Bogotá es:",
+s:["«Autónoma y sancionadora».","«Recaudadora y eficiente».","«Descentralizada y regional».","«Moderna y digital»."],a:3,
+e:"Las líneas son: «Garante de los derechos, oportuna y resolutiva»; «Cercana a la ciudadanía»; «Generadora de conocimiento con capital humano»; y «Moderna y digital». Solo la 4 es verdadera.",f:"PEI 01-PL-012 v4, num. 6.4"},
+{tm:"T4",t:1,q:"Para el análisis del entorno (factores políticos, económicos, sociales, tecnológicos, ecológicos y legales), el PEI utiliza la herramienta:",
+o:["PESTEL","DOFA","Balanced Scorecard","Matriz de Eisenhower"],
+e:"El PEI usa PESTEL para el entorno (Anexo 1) y DOFA para el diagnóstico institucional (Anexo 2).",f:"PEI 01-PL-012 v4, nums. 6.3 y 6.4"},
+{tm:"T4",t:1,q:"En el diagnóstico DOFA del PEI 2024-2028, la categoría con mayor número de variables identificadas fue:",
+o:["Fortalezas (123 variables)","Amenazas (103 variables)","Debilidades (81 variables)","Oportunidades (74 variables)"],
+e:"Tabla 1 del PEI: fortalezas 123, amenazas 103, debilidades 81, oportunidades 74.",f:"PEI 01-PL-012 v4, num. 6.4, Tabla 1"},
+{tm:"T4",t:1,q:"En la matriz de estrategias del PEI, las estrategias que cruzan debilidades y amenazas (DA) se denominan:",
+o:["De supervivencia","De éxito","De reacción","De adaptación"],
+e:"FO: de éxito u ofensivas. FA: de reacción o defensivas. DO: de adaptación. DA: de supervivencia.",f:"PEI 01-PL-012 v4, num. 6.4, Tabla 2"},
+{tm:"T4",t:1,q:"El modelo de operación por procesos de la Personería, según el PEI, comprende:",
+o:["16 procesos","12 procesos","19 procesos","7 procesos"],
+e:"El mapa de procesos tiene 16 procesos: 3 misionales, 4 estratégicos, 7 de apoyo y 2 de evaluación y control.",f:"PEI 01-PL-012 v4, num. 6.1"},
+{tm:"T4",t:1,q:"¿Con qué periodicidad se hace seguimiento al cumplimiento del PEI 2024-2028?",
+o:["Semestral, dentro de cada vigencia","Mensual","Anual, al cierre de cada vigencia","Solo al final del cuatrienio"],
+e:"El PEI dispone un seguimiento semestral dentro de cada vigencia.",f:"PEI 01-PL-012 v4, num. 6.5"},
+{tm:"T4",t:1,q:"¿Qué instrumento despliega las metas del PEI mediante metas operativas e indicadores por proceso?",
+o:["El 01-PL-013 Plan Operativo Anual por procesos","El Plan Anual de Adquisiciones","El Plan Institucional de Capacitación","El Programa de Gestión Documental"],
+e:"El PEI se operativiza con el Plan Operativo Anual por procesos (01-PL-013) y con los proyectos de inversión.",f:"PEI 01-PL-012 v4, num. 6.5"},
+{tm:"T4",t:1,q:"¿Qué meta estratégica del PEI se relaciona directamente con el Sistema de Gestión Ambiental?",
+o:["Meta 4.2: mantener y adecuar el 100 % de los Sistemas de Gestión de la Calidad y Ambiental","Meta 1.2: ejercicios de prevención y control a la función pública","Meta 2.3: plan de participación ciudadana","Meta 4.10: prevención de faltas disciplinarias"],
+e:"La meta 4.2, del objetivo 4 (modernización), busca mantener y adecuar los sistemas de Calidad y Ambiental.",f:"PEI 01-PL-012 v4, objetivo 4"},
+{tm:"T4",t:1,q:"La meta estratégica 1.2 del PEI se refiere a:",
+o:["Realizar 2.526 ejercicios de prevención y control a la función pública a las entidades de la administración distrital en el cuatrienio","Realizar 2.519 acciones de articulación interinstitucional y acercamiento a la comunidad","Desarrollar 42 estrategias de transferencia de conocimiento","Desarrollar 600 actividades de prevención de faltas disciplinarias"],
+e:"Meta 1.2: 2.526 ejercicios de prevención y control. Las demás son las metas 2.1, 3.1 y 4.10.",f:"PEI 01-PL-012 v4, objetivo 1"},
+{tm:"T4",t:3,af:"El PEI 2024-2028 fue aprobado por el Comité Directivo Institucional.",
+rz:"La Resolución 180 de 2025 asigna al Comité Directivo Institucional revisar, aprobar y hacer seguimiento a los planes, programas, proyectos y estrategias de carácter estratégico.",a:0,
+e:"El cuadro de aprobación del PEI v4 señala al CDI, y el art. 8 num. 5 de la Res. 180 le da esa competencia. La razón explica la afirmación.",f:"PEI 01-PL-012 v4; Res. 180/2025, art. 8"},
+{tm:"T4",t:2,q:"Sobre el control de cambios del PEI 2024-2028:",
+s:["La versión inicial es del 7 de junio de 2024.","La versión 3 eliminó el objetivo de transformación tecnológica.","Las modificaciones de metas de las versiones 2 y 4 fueron aprobadas por el Comité Institucional de Gestión y Desempeño.","El PEI no ha tenido modificaciones desde su adopción."],a:1,
+e:"Verdaderas 1 y 3. La versión 3 (29/08/2025) armonizó los objetivos con el Acuerdo 978 y actualizó el entorno y el diagnóstico; no eliminó el objetivo tecnológico.",f:"PEI 01-PL-012 v4, control de cambios"},
+{tm:"T4",t:1,q:"Según la línea de tiempo del PEI, ¿qué acuerdo distrital creó la Oficina de Control Interno Disciplinario y la Dirección de Gestión del Conocimiento e Innovación?",
+o:["Acuerdo 755 de 2019","Acuerdo 514 de 2012","Acuerdo 698 de 2018","Acuerdo 34 de 1993"],
+e:"El Acuerdo 755 de 2019 reformó y amplió la planta, creó esas dependencias y delegadas especializadas. El 514 de 2012 creó dependencias de atención directa (conciliación, consumidor, víctimas).",f:"PEI 01-PL-012 v4, num. 6.1"},
+{tm:"T4",t:1,q:"El objetivo del PEI busca fortalecer la efectividad institucional mediante un enfoque territorial, diferencial, preventivo y basado en información. ¿Qué enfoque NO menciona?",
+o:["Punitivo","Territorial","Diferencial","Preventivo"],
+e:"El objetivo del PEI menciona enfoques territorial, diferencial, preventivo y basado en información.",f:"PEI 01-PL-012 v4, num. 1"},
+{tm:"T4",t:3,af:"El análisis PESTEL del PEI se construyó en trabajo articulado con los sistemas de gestión de la entidad.",
+rz:"PESTEL es una herramienta de análisis del entorno interno que identifica fortalezas y debilidades de la entidad.",a:2,
+e:"La afirmación es cierta (num. 6.3). La razón es falsa: PESTEL analiza el entorno EXTERNO; fortalezas y debilidades son del DOFA.",f:"PEI 01-PL-012 v4, nums. 4 y 6.3"}
+];
+
+/* Banco de preguntas — Parte 5: Manual de Funciones 08-MN-001 v14 y Código de Integridad de la Personería (documentos leídos completos) */
+const Q5 = [
+/* ───────── T6 · Manual Específico de Funciones 08-MN-001 v14 ───────── */
+{tm:"T6",t:1,q:"Según el Manual 08-MN-001, ¿qué dependencia es responsable de los contenidos del manual?",
+o:["La Dirección de Talento Humano","La Dirección de Planeación","La Oficina Asesora Jurídica","La Subdirección de Desarrollo del Talento Humano"],
+e:"La Dirección de Talento Humano lo elaboró con la información de las áreas y responde por los contenidos. Planeación responde por las formalidades del documento, y los jefes de dependencia aprueban los perfiles asignados.",f:"Manual 08-MN-001 v14, Responsables"},
+{tm:"T6",t:1,q:"La versión 14 del Manual Específico de Funciones (vigente desde el 4 de mayo de 2026) fue aprobada por:",
+o:["El Comité Directivo Institucional","El Concejo de Bogotá","El Departamento Administrativo del Servicio Civil Distrital","La Comisión Nacional del Servicio Civil"],
+e:"El cuadro de aprobación indica: elaboró el Director de Talento Humano, revisó el Director de Planeación (E) y aprobó el Comité Directivo Institucional.",f:"Manual 08-MN-001 v14, control de cambios"},
+{tm:"T6",t:2,q:"Según las condiciones generales del Manual 08-MN-001, cada perfil contiene:",
+s:["La identificación del empleo.","El área funcional.","El propósito principal.","La asignación básica mensual del empleo."],a:0,
+e:"El manual contiene identificación, área funcional, propósito principal, funciones esenciales, conocimientos básicos, competencias comportamentales (comunes, por nivel y funcionales) y requisitos de formación y experiencia. La asignación salarial no hace parte del manual.",f:"Manual 08-MN-001 v14, Condiciones generales"},
+{tm:"T6",t:1,q:"Según el Manual, cuando para un empleo se exige una profesión reglamentada, los títulos, licencias o matrículas:",
+o:["No pueden compensarse por experiencia u otras calidades, salvo que la ley lo establezca","Pueden compensarse siempre con el doble de experiencia","Pueden reemplazarse por certificados de cursos de educación informal","Se presumen acreditados con la posesión en el cargo"],
+e:"Es la regla de improcedencia de compensación de requisitos que recoge el manual.",f:"Manual 08-MN-001 v14, Condiciones generales"},
+{tm:"T6",t:1,q:"El Manual asigna la función especial de ejercer la supervisión de los contratos asignados a los niveles directivo, asesor, profesional y técnico. ¿Qué nivel NO la tiene?",
+o:["Asistencial","Profesional","Técnico","Asesor"],
+e:"La función especial de supervisión de contratos se asigna a los niveles directivo, asesor, profesional y técnico.",f:"Manual 08-MN-001 v14, Funciones generales y especiales"},
+{tm:"T6",t:2,q:"Sobre las funciones esenciales comunes a todos los empleos de la Personería (distintos del Personero):",
+s:["Atender las consultas de los usuarios internos y externos, según su competencia.","Firmar los actos administrativos de la dependencia.","Cumplir las políticas de los sistemas de gestión de calidad, seguridad y salud en el trabajo, ambiental y seguridad de la información.","Aprobar el plan anual de adquisiciones de la entidad."],a:1,
+e:"Las funciones comunes incluyen atender consultas, preparar informes, mantener actualizados los sistemas de información, proponer mejoras, custodiar documentos y bienes y cumplir las políticas de los sistemas de gestión. Firmar actos y aprobar el plan de adquisiciones no son funciones comunes. Verdaderas 1 y 3.",f:"Manual 08-MN-001 v14, Funciones esenciales comunes"},
+{tm:"T6",t:1,q:"El Manual define la competencia, con base en el Decreto 1083 de 2015, como:",
+o:["La capacidad de una persona para desempeñar, en diferentes contextos y según la calidad y resultados esperados, las funciones de un empleo, determinada por conocimientos, destrezas, habilidades, valores, actitudes y aptitudes","El conjunto de títulos académicos que acredita el servidor","La facultad legal de una autoridad para conocer de un asunto","El puntaje obtenido en la evaluación del desempeño"],
+e:"Definición del art. 2.2.4.2 del Decreto 1083 de 2015, recogida en el manual.",f:"Manual 08-MN-001 v14, Definiciones"},
+{tm:"T6",t:1,q:"Según la definición del artículo 19 de la Ley 909 de 2004 que cita el Manual, el empleo público es:",
+o:["El conjunto de funciones, tareas y responsabilidades asignadas a una persona y las competencias requeridas para llevarlas a cabo, para cumplir los planes de desarrollo y los fines del Estado","El contrato de prestación de servicios suscrito con una entidad pública","La vinculación de un particular que ejerce funciones públicas transitorias","El cargo de libre nombramiento y remoción de la alta dirección"],
+e:"El empleo es el núcleo básico de la estructura de la función pública (Ley 909, art. 19).",f:"Manual 08-MN-001 v14, Definiciones; Ley 909/2004, art. 19"},
+{tm:"T6",t:2,q:"Sobre los requisitos de experiencia en las fichas de la Delegada para Asuntos Policivos y Civiles (todas exigen título de abogado):",
+s:["Profesional Especializado 222-04: especialización y 48 meses de experiencia profesional relacionada.","Profesional Especializado 222-02: especialización y 60 meses de experiencia profesional relacionada.","Profesional Universitario 219-01: no requiere experiencia.","Personero Delegado 040-03: especialización y 12 meses de experiencia profesional."],a:1,
+e:"222-04: 48 meses relacionada; 222-03: 30 meses relacionada; 222-02: 12 meses de experiencia profesional; 219-01: no requiere; Personero Delegado 040-03: 60 meses relacionada y/o docente. Verdaderas 1 y 3.",f:"Manual 08-MN-001 v14, fichas 2.2.6"},
+{tm:"T6",t:1,q:"El Profesional Especializado 222-03 de la Delegada para Asuntos Policivos y Civiles requiere título de abogado, especialización y:",
+o:["Treinta meses de experiencia profesional relacionada","Cuarenta y ocho meses de experiencia profesional relacionada","Doce meses de experiencia profesional","Ninguna experiencia"],
+e:"Ficha 2.2.6-PRO-222-03-1. Los 48 meses corresponden al grado 04 y los 12 al grado 02.",f:"Manual 08-MN-001 v14, ficha 2.2.6-PRO-222-03-1"},
+{tm:"T6",t:1,q:"¿Cuál ficha de la Delegada para Asuntos Policivos y Civiles tiene como propósito dirigir, diseñar e implementar estrategias, lineamientos e instrumentos institucionales para fortalecer el Ministerio Público en materia policiva y civil?",
+o:["Profesional Especializado 222-04","Profesional Especializado 222-02","Profesional Universitario 219-01","Auxiliar Administrativo 407-02"],
+e:"El 222-04 dirige y diseña estrategias; el 222-03 y el 222-02 ejercen la función de agente del Ministerio Público; el 219-01 la ejecuta.",f:"Manual 08-MN-001 v14, fichas 2.2.6"},
+{tm:"T6",t:1,q:"Según las fichas de Profesional Especializado 222-04 y 222-03 de Asuntos Policivos y Civiles, las presuntas irregularidades de los jueces civiles municipales de Bogotá se informan a:",
+o:["El Consejo Superior de la Judicatura","La Fiscalía General de la Nación","El Tribunal Superior de Bogotá","La Personería Delegada para la Segunda Instancia"],
+e:"Así lo establecen las funciones de esas fichas. La Personería no tiene competencia disciplinaria sobre los jueces.",f:"Manual 08-MN-001 v14, fichas 2.2.6-PRO-222-04-1 y 222-03-1"},
+{tm:"T6",t:1,q:"Las fichas profesionales de la Delegada para Asuntos Policivos y Civiles incluyen intervenir como agente del Ministerio Público en:",
+o:["Los procesos de cobro coactivo que adelanten las autoridades distritales, en cualquiera de sus etapas","Los procesos de responsabilidad fiscal, como autoridad de decisión","Los juicios de pérdida de investidura de concejales","Las audiencias ante jueces penales con función de control de garantías"],
+e:"Es una de sus funciones esenciales. Lo penal corresponde a las Delegadas para Asuntos Penales.",f:"Manual 08-MN-001 v14, fichas 2.2.6"},
+{tm:"T6",t:1,q:"En el Manual, el jefe inmediato del Personero Delegado para Asuntos Policivos y Civiles (040-03) es:",
+o:["El Personero Auxiliar","El Personero de Bogotá","El Personero Delegado para la Misionalidad del Ministerio Público y la Función Pública","El Secretario General"],
+e:"Ficha 2.2.6-DIR-040-03-1.",f:"Manual 08-MN-001 v14, ficha 2.2.6-DIR-040-03-1"},
+{tm:"T6",t:1,q:"¿Cuál de estos NO figura entre los conocimientos básicos de las fichas de la Delegada para Asuntos Policivos y Civiles?",
+o:["Derecho marítimo","Código Nacional de Seguridad y Convivencia Ciudadana","Código Nacional de Tránsito Terrestre","Estatuto Tributario de Bogotá"],
+e:"Las fichas incluyen, entre otros, derecho constitucional, policivo, administrativo y civil, el Código de Seguridad y Convivencia, el de Tránsito, el Estatuto Tributario de Bogotá y la normativa de procesos de cobro.",f:"Manual 08-MN-001 v14, fichas 2.2.6"},
+{tm:"T6",t:3,af:"Como sujeto procesal especial, el profesional de la Delegada para Asuntos Policivos y Civiles puede solicitar medidas cautelares cuando se trate del cumplimiento de una función específica del Ministerio Público.",
+rz:"Las fichas le permiten dictar sentencia en los procesos civiles de mínima cuantía.",a:2,
+e:"La afirmación está en las funciones de las fichas (interponer recursos, conceptuar, pedir nulidades y pruebas, y medidas cautelares en ese supuesto). La razón es falsa: el Ministerio Público interviene, no decide.",f:"Manual 08-MN-001 v14, fichas 2.2.6"},
+{tm:"T6",t:1,q:"¿Qué versión del Manual incorporó las dependencias y cargos del rediseño institucional del Acuerdo 978 de 2025?",
+o:["Versión 13, del 18 de marzo de 2025","Versión 12, del 31 de enero de 2024","Versión 9, del 4 de febrero de 2020","Versión 1, del 8 de enero de 2016"],
+e:"La versión 13 incorporó el rediseño del Acuerdo 978; la 14 depuró y estandarizó perfiles. La 12 ajustó los NBC según el SNIES y la 9 incorporó el rediseño del Acuerdo 755 de 2019.",f:"Manual 08-MN-001 v14, control de cambios"},
+{tm:"T6",t:1,q:"Las fichas del Manual remiten, en materia de equivalencias entre estudios y experiencia, a:",
+o:["El artículo 25 del Decreto Ley 785 de 2005","El artículo 125 de la Constitución","El artículo 19 de la Ley 909 de 2004","El Acuerdo 978 de 2025"],
+e:"Cada ficha indica que se aplican las equivalencias del art. 25 del Decreto Ley 785 de 2005 o las normas que lo modifiquen.",f:"Manual 08-MN-001 v14, fichas (Equivalencias)"},
+{tm:"T6",t:1,q:"¿Cuál de estas NO es una competencia comportamental por nivel jerárquico del Personero Delegado (nivel directivo) en el Manual?",
+o:["Aporte técnico-profesional","Visión estratégica","Pensamiento sistémico","Resolución de conflictos"],
+e:"El nivel directivo tiene visión estratégica, liderazgo efectivo, planeación, toma de decisiones, gestión del desarrollo de las personas, pensamiento sistémico y resolución de conflictos. El aporte técnico-profesional es del nivel profesional.",f:"Manual 08-MN-001 v14, ficha 2.2.6-DIR-040-03-1"},
+
+/* ───────── T7 · Labores del nivel profesional y asistencial (Manual 08-MN-001) ───────── */
+{tm:"T7",t:1,q:"¿Cuál de estas funciones NO es común al nivel profesional según el Manual 08-MN-001?",
+o:["Definir, adoptar y dirigir las políticas, planes y estrategias de la dependencia","Emitir conceptos y absolver consultas en asuntos de su competencia","Realizar y coordinar estudios e investigaciones","Ejecutar y hacer seguimiento a programas y proyectos, verificando metas, indicadores y riesgos"],
+e:"Definir y dirigir las políticas de la dependencia es función común del nivel directivo.",f:"Manual 08-MN-001 v14, Funciones comunes por niveles"},
+{tm:"T7",t:2,q:"Sobre las funciones comunes del nivel asistencial según el Manual:",
+s:["Recibir, radicar, clasificar, distribuir y archivar documentos y correspondencia.","Realizar actividades de apoyo administrativo para la ejecución de planes y proyectos.","Realizar la entrega y recibo de documentos y archivos mediante inventarios documentales.","Emitir conceptos jurídicos en los asuntos de la dependencia."],a:0,
+e:"Verdaderas 1, 2 y 3. Emitir conceptos es función del nivel profesional y asesor.",f:"Manual 08-MN-001 v14, Funciones comunes – nivel asistencial"},
+{tm:"T7",t:1,q:"Según el Manual, el Auxiliar Administrativo 407-02 y el Secretario 440-02 requieren:",
+o:["Diploma de bachiller en cualquier modalidad y 18 meses de experiencia laboral","Título técnico profesional y 12 meses de experiencia","Título profesional sin experiencia","Diploma de bachiller sin experiencia"],
+e:"Ambas fichas exigen bachiller en cualquier modalidad y 18 meses de experiencia laboral.",f:"Manual 08-MN-001 v14, fichas 0-ASI-407-02-1 y 1-ASI-440-02-1"},
+{tm:"T7",t:1,q:"Las competencias por nivel jerárquico de las fichas asistenciales del Manual son:",
+o:["Manejo de la información, relaciones interpersonales y colaboración","Aporte técnico-profesional, comunicación efectiva y gestión de procedimientos","Visión estratégica, liderazgo efectivo y planeación","Confiabilidad técnica, creatividad e innovación"],
+e:"Fichas asistenciales: manejo de la información, relaciones interpersonales y colaboración. La segunda opción es del nivel profesional y la tercera del directivo.",f:"Manual 08-MN-001 v14, fichas asistenciales"},
+{tm:"T7",t:1,q:"Cuando el Auxiliar Administrativo 407-02 está en las Delegadas de Instrucción, Juzgamiento o Segunda Instancia, le corresponde, entre otras funciones:",
+o:["Elaborar los oficios de notificación y custodiar los expedientes cuando los implicados soliciten revisión, copias o desgloses","Proferir los autos de apertura de investigación","Decidir los recursos de apelación","Practicar pruebas en segunda instancia"],
+e:"La ficha asigna funciones de apoyo: oficios de notificación, apoyo a notificaciones y audiencias, registro de providencias, custodia de expedientes y archivo.",f:"Manual 08-MN-001 v14, ficha 0-ASI-407-02-1"},
+{tm:"T7",t:1,q:"Cuando el Auxiliar Administrativo 407-02 está en la Dirección de Conciliación y MASC, una de sus funciones es:",
+o:["Registrar las audiencias de conciliación en el sistema de información dispuesto por el Ministerio de Justicia y del Derecho","Actuar como conciliador en audiencias de conciliación extrajudicial","Aprobar los acuerdos conciliatorios","Expedir las constancias de no acuerdo como conciliador"],
+e:"La ficha le asigna elaborar citaciones, registrar las audiencias en el sistema del Ministerio de Justicia y actualizar el registro de abogados conciliadores.",f:"Manual 08-MN-001 v14, ficha 0-ASI-407-02-1"},
+{tm:"T7",t:3,af:"El profesional debe realizar la entrega y recibo de documentos y archivos mediante inventarios documentales.",
+rz:"El Manual incluye esa labor entre las funciones comunes del nivel profesional, conforme a los instrumentos archivísticos definidos.",a:0,
+e:"Es la función común n.º 13 del nivel profesional. La razón da el fundamento de la afirmación.",f:"Manual 08-MN-001 v14, Funciones comunes – nivel profesional"},
+{tm:"T7",t:1,q:"En las fichas de la Delegada para Asuntos Policivos y Civiles, el propósito principal del Profesional Universitario 219-01 se formula como:",
+o:["Ejecutar la función de agente del Ministerio Público ante las autoridades administrativas, de policía y judiciales","Dirigir la intervención del Ministerio Público de la delegada","Diseñar los lineamientos institucionales en materia policiva y civil","Apoyar actividades asistenciales y de soporte administrativo"],
+e:"219-01: ejecutar. 222-03 y 222-02: ejercer la función de agente. 222-04: dirigir, diseñar e implementar estrategias. El Personero Delegado dirige la intervención; el asistencial apoya.",f:"Manual 08-MN-001 v14, ficha 2.2.6-PRO-219-01-1"},
+{tm:"T7",t:1,q:"Una de las funciones comunes del nivel técnico según el Manual es:",
+o:["Ejecutar actividades técnicas relacionadas con la implementación y seguimiento de planes, programas y proyectos","Emitir conceptos y absolver consultas","Representar a la alta dirección ante instancias externas","Asesorar a la alta dirección en la formulación de políticas"],
+e:"La segunda es profesional o asesora, la tercera directiva y la cuarta asesora.",f:"Manual 08-MN-001 v14, Funciones comunes – nivel técnico"},
+
+/* ───────── T13 · Código de Integridad de la Personería (cartilla 2025) ───────── */
+{tm:"T13",t:1,q:"¿Qué lema acompaña el Código de Integridad de la Personería de Bogotá?",
+o:["«Somos una Personería resolutiva, oportuna, pero sobre todo humana»","«Bogotá camina segura»","«Lo público es sagrado, lo privado es negociable»","«Los valores de la casa»"],
+e:"Es el lema de la cartilla. «Lo público es sagrado» aparece como principio de acción de honestidad, sin la segunda parte.",f:"Código de Integridad Personería, cartilla 2025"},
+{tm:"T13",t:1,q:"El Código de Integridad de la Personería es el resultado de armonizar:",
+o:["La Guía para la Ética del Servicio de la Personería y el Código de Integridad del Servicio Público","El Código Disciplinario Único y el Estatuto Anticorrupción","El Plan Estratégico Institucional y el Manual de Funciones","El Ideario Ético Distrital y el Código Penal"],
+e:"La cartilla explica que fue un ejercicio participativo, con apoyo del Equipo de Gestores de Integridad.",f:"Código de Integridad Personería, cartilla 2025"},
+{tm:"T13",t:1,q:"Los principios de acción del Código de Integridad de la Personería se expresan en términos de:",
+o:["«Qué hago» y «Qué no hago» como servidor público íntegro","Derechos y deberes del ciudadano","Faltas leves, graves y gravísimas","Metas e indicadores de gestión"],
+e:"Cada uno de los 7 valores tiene principios de acción en esas dos columnas.",f:"Código de Integridad Personería, cartilla 2025"},
+{tm:"T13",t:1,q:"«Actúo siempre con fundamento en la verdad, cumpliendo mis deberes con transparencia, rectitud y siempre favoreciendo el interés general». Según el Código de la Personería, es la definición de:",
+o:["Honestidad","Justicia","Compromiso","Liderazgo"],
+e:"Definición de honestidad en la cartilla.",f:"Código de Integridad Personería, cartilla 2025"},
+{tm:"T13",t:1,q:"«Reconozco, valoro y trato de manera digna a todas las personas, con sus virtudes y defectos, sin importar su labor, procedencia, títulos o cualquier otra condición». El valor es:",
+o:["Respeto","Justicia","Diligencia","Crecimiento personal"],
+e:"Definición de respeto en la cartilla.",f:"Código de Integridad Personería, cartilla 2025"},
+{tm:"T13",t:1,q:"El valor que se define como el conocimiento y conciencia de los intereses de desarrollo personal y familiar, y la forma en que se articulan con el cumplimiento de los deberes institucionales, es:",
+o:["Crecimiento personal","Liderazgo","Compromiso","Diligencia"],
+e:"Es uno de los dos valores propios de la Personería, junto con liderazgo.",f:"Código de Integridad Personería, cartilla 2025"},
+{tm:"T13",t:1,q:"«Jamás busco figurar y quedarme con el crédito del trabajo hecho por el equipo». ¿A qué valor corresponde este «qué no hago»?",
+o:["Liderazgo","Honestidad","Respeto","Crecimiento personal"],
+e:"Hace parte de los principios de acción del liderazgo, junto con no buscar culpables sino soluciones en consenso.",f:"Código de Integridad Personería, cartilla 2025"},
+{tm:"T13",t:2,q:"Sobre los principios de acción del valor honestidad en el Código de la Personería:",
+s:["Siempre digo la verdad, incluso cuando cometo errores.","No uso recursos públicos para fines personales, incluido el tiempo de mi jornada laboral.","Denuncio las faltas, delitos o violaciones de derechos que conozco en el ejercicio del cargo.","Puedo aceptar incentivos de interesados si no afectan mi decisión."],a:0,
+e:"Verdaderas 1, 2 y 3. El código dice expresamente que no se aceptan incentivos, favores ni beneficios de interesados en un proceso de decisión.",f:"Código de Integridad Personería, cartilla 2025"},
+{tm:"T13",t:1,q:"«No postergo las decisiones ni actividades que den solución a problemáticas ciudadanas… Hay cosas que sencillamente no se dejan para otro día». El valor es:",
+o:["Diligencia","Compromiso","Justicia","Liderazgo"],
+e:"Es un «qué no hago» de la diligencia.",f:"Código de Integridad Personería, cartilla 2025"},
+{tm:"T13",t:1,q:"«Nunca permito que odios, simpatías, antipatías, caprichos, presiones o intereses de orden personal o grupal interfieran en mi criterio». El valor es:",
+o:["Justicia","Respeto","Honestidad","Compromiso"],
+e:"Es un «qué no hago» de la justicia, que exige imparcialidad y decisiones basadas en evidencia.",f:"Código de Integridad Personería, cartilla 2025"},
+{tm:"T13",t:3,af:"Según el Código de la Personería, el servidor no debe pensar que su trabajo es un «favor» a la ciudadanía, sino un compromiso y un orgullo.",
+rz:"El valor respeto permite postergar la atención de un ciudadano cuando el servidor está ocupado.",a:2,
+e:"La afirmación es un principio del valor compromiso. La razón es falsa: el compromiso exige no ignorar nunca a un ciudadano y estar atento sin distracciones.",f:"Código de Integridad Personería, cartilla 2025"},
+{tm:"T13",t:1,q:"¿A qué valor del Código de la Personería corresponde «No genero resistencia al cambio, sobre todo el que implique mejoramiento de los procesos»?",
+o:["Crecimiento personal","Diligencia","Liderazgo","Respeto"],
+e:"Es un «qué no hago» del crecimiento personal.",f:"Código de Integridad Personería, cartilla 2025"},
+{tm:"T13",t:2,q:"Sobre los principios de acción del valor liderazgo:",
+s:["Promuevo un clima laboral que facilita la información fluida, la confianza mutua y la sinergia grupal.","Impongo mi punto de vista en la toma de decisiones cuando tengo la razón.","Comparto mis conocimientos y retroalimento a mis compañeros.","Ante un error, primero identifico al culpable y luego busco soluciones."],a:1,
+e:"Verdaderas 1 y 3. El código dice que nunca se actúa de manera arbitraria ni imponiendo el propio punto de vista, y que no se buscan culpables sino soluciones en consenso.",f:"Código de Integridad Personería, cartilla 2025"},
+{tm:"T13",t:1,q:"Según la cartilla del Código de Integridad, el Equipo Líder de Integridad hace parte de:",
+o:["La Dirección de Talento Humano","La Oficina de Control Interno","La Oficina de Control Disciplinario Interno","La Dirección de Planeación"],
+e:"La cartilla presenta al Equipo Líder de Integridad de la Dirección de Talento Humano, junto con el Equipo de Gestores de Integridad.",f:"Código de Integridad Personería, cartilla 2025"}
+];
+
+</script>
+<script>
+"use strict";
+/* ═══════ Datos y constantes ═══════ */
+const TEMAS = {
+ T1:"Acuerdo Distrital 978 de 2025",
+ T2:"Decreto Ley 1421 de 1993",
+ T3:"Resolución 180 de 2025 · MECI y Modelo de Gestión",
+ T4:"Plan Estratégico Institucional 2024-2028",
+ T5:"Sistema de Gestión Ambiental",
+ T6:"Manual de Funciones (Res. 1567-10000-2026 · 08-MN-001)",
+ T7:"Labores del nivel profesional y asistencial",
+ T8:"Principios constitucionales, DD.FF. y función pública",
+ T9:"Derecho de petición y atención a la ciudadanía",
+ T10:"Hábeas data y protección de datos",
+ T11:"Transparencia y acceso a la información pública",
+ T12:"Prevención de la corrupción y control",
+ T13:"Código de Integridad",
+ T14:"Gestión documental y archivos",
+ T15:"DD.HH. y víctimas del conflicto armado",
+ T16:"Enfoque diferencial, de género e interseccional",
+ T17:"Violencias y discriminación contra las mujeres",
+ T18:"Acoso sexual en el ámbito laboral",
+ T19:"Niños, niñas y adolescentes",
+ T20:"Sujetos de especial protección constitucional"
+};
+const ASPECTOS=[
+ {id:"A1",nombre:"Institucional Personería",desc:"Acuerdo 978, DL 1421, Res. 180, PEI, SGA, Manual y labores del cargo",temas:["T1","T2","T3","T4","T5","T6","T7"],color:"teal"},
+ {id:"A2",nombre:"Función pública y transparencia",desc:"Constitución, petición, datos, transparencia, anticorrupción, integridad y archivo",temas:["T8","T9","T10","T11","T12","T13","T14"],color:"violet"},
+ {id:"A3",nombre:"Derechos humanos y enfoques",desc:"Víctimas, enfoques, mujeres, acoso sexual, NNA y sujetos de especial protección",temas:["T15","T16","T17","T18","T19","T20"],color:"coral"}
+];
+const SR="http://www.secretariasenado.gov.co/senado/basedoc/";
+const FUENTES={
+ GEN:[{t:"Anexo Técnico del concurso (documento de la convocatoria)",u:""},
+  {t:"Secretaría del Senado – base documental de leyes y Constitución",u:SR},
+  {t:"Régimen Legal de Bogotá (normas distritales)",u:"https://www.alcaldiabogota.gov.co/sisjur/"},
+  {t:"Gestor Normativo de Función Pública (decretos nacionales)",u:"https://www.funcionpublica.gov.co/eva/gestornormativo/"},
+  {t:"SUIN-Juriscol (normas vigentes con notas de vigencia)",u:"https://www.suin-juriscol.gov.co/"},
+  {t:"Portal de la Personería de Bogotá",u:"https://www.personeriabogota.gov.co/"}],
+ T1:[{t:"Acuerdo 978 de 2025 – texto completo (Régimen Legal de Bogotá)",u:"https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=176057"},
+  {t:"Acuerdo 978 de 2025 – Anales del Concejo No. 773 (PDF)",u:"https://concejodebogota.gov.co/concejo/site/docs/20250311/asocfile/20250311171233/edicion_773_acuerdo_978__de_marzo_de_2025.pdf"}],
+ T2:[{t:"Decreto Ley 1421 de 1993 – texto vigente (arts. 97 a 102: Personería)",u:"https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=9027"}],
+ T3:[{t:"Resolución 180 de 2025 – listado oficial de resoluciones 2025",u:"https://www.personeriabogota.gov.co/informes/category/1034-resoluciones-2025"},
+  {t:"Ley 87 de 1993 – control interno",u:SR+"ley_0087_1993.html"},
+  {t:"Decreto 1083 de 2015 – Único Reglamentario Función Pública (MIPG y MECI)",u:"https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=62518"}],
+ T4:[{t:"Misión, visión y objetivos – Personería",u:"https://www.personeriabogota.gov.co/la-entidad/vision"},
+  {t:"Objetivos estratégicos y de calidad – Personería",u:"https://www.personeriabogota.gov.co/plataforma-estrategica/objetivos-estrategicos"},
+  {t:"PEI 2024-2028 (01-PL-012 v4) y sus anexos – Personería",u:"https://www.personeriabogota.gov.co/planeacion/plan-estrategico-institucional-pei-planes/category/1069-01-pl-12-plan-estrategico-institucional-2024-2028-v4"},
+  {t:"Reporte de inversión por sector – Secretaría Distrital de Planeación",u:"https://www.sdp.gov.co/sites/default/files/pa_ci_20241231_sector.pdf"}],
+ T5:[{t:"Sistema de Gestión Ambiental – Personería",u:"https://www.personeriabogota.gov.co/sistemas-de-gestion/sistema-de-gestion-ambiental-sga"},
+  {t:"Sistema de Gestión Ambiental – Intranet (política ambiental)",u:"https://intranet.personeriabogota.gov.co/mipg/sistemas-de-gestion/sistema-de-gestion-ambiental"},
+  {t:"Documentos asociados al SGA",u:"https://www.personeriabogota.gov.co/informes/category/495-documentos-asociados-al-sga"},
+  {t:"Matriz de aspectos e impactos ambientales 2024",u:"https://www.personeriabogota.gov.co/informes/download/496-aspectos-e-impactos-ambientales/28023-matriz-de-identificacion-de-aspectos-y-valoracion-de-impactos-ambientales-2024"},
+  {t:"Matriz de riesgos y oportunidades ambientales 2025",u:"https://www.personeriabogota.gov.co/informes/download/756-planeacion-sga/31434-matriz-de-riesgos-y-oportunidades-ambientales-2025"},
+  {t:"Plan Institucional de Gestión Ambiental – PIGA",u:"https://www.personeriabogota.gov.co/acuerdos/category/22-plan-institucional-de-gestion-ambiental-piga"},
+  {t:"Informe MDI 2024 – Componente ambiental (Secretaría General)",u:"https://secretariageneral.gov.co/sites/default/files/2025-12/Informe%20Pol%C3%ADtica%20MDI%202024%20Componente%20ambiental.pdf"}],
+ T6:[{t:"Manual de Funciones 08-MN-001 v14 completo (994 páginas) – documento que aportaste",u:""},
+  {t:"Manual de Funciones 08-MN-001 v14 – ficha publicada (PDF)",u:"https://aspirantes.serviciocivil.gov.co/storage/solicituds/78a13c31a4ba32f5e14a7a471fd3d8f4ff256402.pdf"},
+  {t:"Decreto Ley 785 de 2005 – niveles, nomenclatura y requisitos",u:"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=16127"},
+  {t:"Decreto 1083 de 2015 – competencias comportamentales (Dec. 815/2018)",u:"https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=62518"}],
+ T7:[{t:"Decreto Ley 785 de 2005 – art. 4, naturaleza de los niveles",u:"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=16127"},
+  {t:"Ley 1952 de 2019 – Código General Disciplinario (deberes)",u:SR+"ley_1952_2019.html"},
+  {t:"Ley 1801 de 2016 – Código de Seguridad y Convivencia",u:SR+"ley_1801_2016.html"}],
+ T8:[{t:"Constitución Política de 1991",u:SR+"constitucion_politica_1991.html"},
+  {t:"Decreto 2591 de 1991 – acción de tutela",u:SR+"decreto_2591_1991.html"}],
+ T9:[{t:"Ley 1755 de 2015 – derecho de petición",u:SR+"ley_1755_2015.html"},
+  {t:"Ley 1437 de 2011 – CPACA",u:SR+"ley_1437_2011.html"}],
+ T10:[{t:"Ley 1581 de 2012 – protección de datos personales",u:SR+"ley_1581_2012.html"},
+  {t:"Ley 1266 de 2008 – hábeas data financiero",u:SR+"ley_1266_2008.html"},
+  {t:"Superintendencia de Industria y Comercio",u:"https://www.sic.gov.co/"}],
+ T11:[{t:"Ley 1712 de 2014 – transparencia y acceso a la información",u:SR+"ley_1712_2014.html"}],
+ T12:[{t:"Ley 1474 de 2011 – Estatuto Anticorrupción",u:SR+"ley_1474_2011.html"},
+  {t:"Ley 2195 de 2022 – transparencia y lucha contra la corrupción",u:SR+"ley_2195_2022.html"},
+  {t:"Ley 1952 de 2019 – Código General Disciplinario",u:SR+"ley_1952_2019.html"},
+  {t:"Ley 2094 de 2021 – reforma disciplinaria",u:SR+"ley_2094_2021.html"},
+  {t:"Ley 850 de 2003 – veedurías ciudadanas",u:SR+"ley_0850_2003.html"},
+  {t:"Ley 2013 de 2019 – publicidad de declaraciones",u:SR+"ley_2013_2019.html"}],
+ T13:[{t:"Cartilla del Código de Integridad de la Personería (7 valores) – documento que aportaste",u:""},
+  {t:"PEI 2024-2028 – valores del Código de Integridad de la Personería",u:""},
+  {t:"Código de Integridad del Servicio Público Distrital (ejemplo IDEP, PDF)",u:"https://www.idep.edu.co/sites/default/files/2024-04/C%C3%B3digo%20de%20Integridad%20del%20Servicio%20P%C3%BAblico%20Distrital%20-IDEP.pdf"}],
+ T14:[{t:"Ley 594 de 2000 – Ley General de Archivos",u:SR+"ley_0594_2000.html"},
+  {t:"Archivo General de la Nación",u:"https://www.archivogeneral.gov.co/"}],
+ T15:[{t:"Ley 1448 de 2011 – víctimas y restitución de tierras",u:SR+"ley_1448_2011.html"},
+  {t:"Unidad para las Víctimas",u:"https://www.unidadvictimas.gov.co/"}],
+ T16:[{t:"Ley 1482 de 2011 – actos de discriminación",u:SR+"ley_1482_2011.html"},
+  {t:"Ley 581 de 2000 – participación de la mujer",u:SR+"ley_0581_2000.html"}],
+ T17:[{t:"Ley 1257 de 2008 – violencias contra las mujeres",u:SR+"ley_1257_2008.html"},
+  {t:"Ley 1761 de 2015 – feminicidio",u:SR+"ley_1761_2015.html"},
+  {t:"Secretaría Distrital de la Mujer",u:"https://www.sdmujer.gov.co/"}],
+ T18:[{t:"Ley 2365 de 2024 – acoso sexual en el ámbito laboral",u:"https://normograma.dian.gov.co/dian/compilacion/docs/ley_2365_2024.htm"},
+  {t:"Ley 1010 de 2006 – acoso laboral",u:SR+"ley_1010_2006.html"},
+  {t:"Código Penal (art. 210A)",u:SR+"ley_0599_2000.html"}],
+ T19:[{t:"Ley 1098 de 2006 – Código de la Infancia y la Adolescencia",u:SR+"ley_1098_2006.html"},
+  {t:"Ley 1620 de 2013 – convivencia escolar",u:SR+"ley_1620_2013.html"},
+  {t:"Ley 2089 de 2021 – prohibición del castigo físico",u:SR+"ley_2089_2021.html"}],
+ T20:[{t:"Ley 1996 de 2019 – capacidad legal de personas con discapacidad",u:SR+"ley_1996_2019.html"},
+  {t:"Ley 1251 de 2008 – personas adultas mayores",u:SR+"ley_1251_2008.html"},
+  {t:"Ley 1641 de 2013 – habitantes de la calle",u:SR+"ley_1641_2013.html"},
+  {t:"Ley 1346 de 2009 – Convención sobre derechos de personas con discapacidad",u:SR+"ley_1346_2009.html"}]
+};
+const OPTS_II=["Si las opciones 1, 2 y 3 son correctas","Si las opciones 1 y 3 son correctas","Si las opciones 2 y 4 son correctas","Si solamente la opción 4 es correcta"];
+const OPTS_III=["La afirmación y la razón son VERDADERAS y la razón es una explicación CORRECTA de la afirmación","La afirmación y la razón son VERDADERAS, pero la razón NO es una explicación correcta de la afirmación","La afirmación es VERDADERA, pero la razón es FALSA","La afirmación es FALSA, pero la razón es VERDADERA"];
+const HOWTO={1:"Tipo I · Única respuesta: seleccione la única opción que responde correctamente el enunciado.",
+2:"Tipo II · Opciones combinadas: una, dos, tres o todas las afirmaciones numeradas pueden ser correctas. Marque A si 1, 2 y 3 son correctas; B si 1 y 3; C si 2 y 4; D si solo la 4.",
+3:"Tipo III · Análisis de relación: evalúe si la AFIRMACIÓN y la RAZÓN son verdaderas y si la razón explica correctamente la afirmación."};
+const TIPO={1:"Tipo I · Única respuesta",2:"Tipo II · Opciones combinadas",3:"Tipo III · Afirmación–Razón"};
+const L=["A","B","C","D"];
+const EXAM=new Date("2026-10-23T08:00:00-05:00");
+const PASS=70, SERIE=20;
+
+const BANK=(()=>{const all=Q1.concat(Q2,Q3,Q4,Q5);const c={};return all.map(q=>{c[q.tm]=(c[q.tm]||0)+1;return Object.assign({id:q.tm+"-"+String(c[q.tm]).padStart(2,"0")},q)})})();
+const BYID=Object.fromEntries(BANK.map(q=>[q.id,q]));
+const tnum=t=>+t.slice(1);
+
+/* ═══════ Utilidades ═══════ */
+function rng(seed){let s=seed>>>0||1;return()=>{s^=s<<13;s>>>=0;s^=s>>17;s^=s<<5;s>>>=0;return s/4294967296}}
+function shuffle(a,r=Math.random){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+const mem={};
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return mem[k]??d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){mem[k]=v}}};
+const KH="mc26_hist", KW="mc26_wrong", KT="mc26_theme", KQ="mc26_q", KS="mc26_series";
+function fmt(sec){const m=Math.floor(sec/60),s=sec%60;return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0")}
+function makeItem(q,r){if(q.t===1){const order=shuffle([0,1,2,3],r);return{id:q.id,order,key:order.indexOf(0)}}return{id:q.id,order:[0,1,2,3],key:q.a}}
+function optText(q,idx){return q.t===1?q.o[idx]:q.t===2?OPTS_II[idx]:OPTS_III[idx]}
+function chip(tm){return `<span class="tchip tc${(tnum(tm)-1)%4}">Tema ${tnum(tm)} · ${esc(TEMAS[tm])}</span>`}
+
+/* ═══════ Registro por pregunta y diagnóstico ═══════ */
+function record(id,ok){const m=store.get(KQ,{});const r=m[id]||{ok:0,n:0,last:null};r.n++;if(ok)r.ok++;r.last=ok?1:0;m[id]=r;store.set(KQ,m);
+  const w=new Set(store.get(KW,[]));ok?w.delete(id):w.add(id);store.set(KW,[...w])}
+function diagnosis(){
+  const m=store.get(KQ,{});
+  return Object.keys(TEMAS).map(tm=>{
+    const qs=BANK.filter(q=>q.tm===tm);const seen=qs.filter(q=>m[q.id]);
+    const ok=seen.reduce((a,q)=>a+(m[q.id].last?1:0),0);
+    const pct=seen.length?Math.round(ok/seen.length*100):null;const cov=Math.round(seen.length/qs.length*100);
+    let st,rank;
+    if(!seen.length){st="Sin practicar";rank=1}
+    else if(pct<PASS){st="Reforzar";rank=0}
+    else if(pct<85||cov<60){st="En progreso";rank=2}
+    else{st="Dominado";rank=3}
+    return{tm,total:qs.length,seen:seen.length,cov,pct,st,rank};
+  }).sort((a,b)=>a.rank-b.rank||(a.pct??101)-(b.pct??101)||tnum(a.tm)-tnum(b.tm));
+}
+const STC={"Reforzar":"bad","Sin practicar":"muted2","En progreso":"amb","Dominado":"good"};
+function diagRows(list,compact){
+  return list.map(d=>`<div class="drow"><div class="dmain"><span class="st ${STC[d.st]}">${d.st}</span><b>${chip(d.tm)}</b>
+    <span class="small muted">${d.seen?`Aciertos en la última respuesta: ${d.pct}% · Vistas ${d.seen}/${d.total} (${d.cov}%)`:`${d.total} preguntas disponibles`}</span></div>
+    <div class="row"><button class="btn sm" onclick="startTopicSeries('${d.tm}')">Practicar serie</button>${compact?"":`<button class="btn alt sm" onclick="biblio('${d.tm}')">Fuentes</button>`}</div></div>`).join("");
+}
+
+/* ═══════ Simulacros fijos ═══════ */
+const FIXED=(()=>{
+  const r=rng(2026);const sims=[[],[],[]];
+  [2,3].forEach(t=>{const g=shuffle(BANK.filter(q=>q.t===t),r).sort((a,b)=>tnum(a.tm)-tnum(b.tm));const cap=t===2?10:12;g.forEach((q,i)=>{if(sims[i%3].filter(x=>x.t===t).length<cap)sims[i%3].push(q)})});
+  const t1=shuffle(BANK.filter(q=>q.t===1),r).sort((a,b)=>tnum(a.tm)-tnum(b.tm));
+  const pool=[[],[],[]];t1.forEach((q,i)=>pool[i%3].push(q));
+  sims.forEach((s,k)=>{
+    const need=50-s.length;const byT={};pool[k].forEach(q=>(byT[q.tm]=byT[q.tm]||[]).push(q));
+    const cnt={};s.forEach(q=>cnt[q.tm]=(cnt[q.tm]||0)+1);const picked=[];
+    while(picked.length<need){const keys=Object.keys(byT).filter(t=>byT[t].length).sort((a,b)=>(cnt[a]||0)-(cnt[b]||0));if(!keys.length)break;const t=keys[0];picked.push(byT[t].shift());cnt[t]=(cnt[t]||0)+1}
+    sims[k]=shuffle(s.concat(picked),r).map(q=>q.id);
+  });
+  return sims;
+})();
+function randomExam(){
+  const ids=[];const byT={};shuffle(BANK).forEach(q=>(byT[q.tm]=byT[q.tm]||[]).push(q));
+  Object.values(byT).forEach(arr=>ids.push(...arr.splice(0,2).map(q=>q.id)));
+  ids.push(...shuffle(Object.values(byT).flat()).slice(0,50-ids.length).map(q=>q.id));
+  return shuffle(ids);
+}
+
+/* ═══════ Series (máximo 20 preguntas) ═══════ */
+function topicSeries(tm){const qs=BANK.filter(q=>q.tm===tm);const n=Math.ceil(qs.length/SERIE);const size=Math.ceil(qs.length/n);const out=[];for(let i=0;i<n;i++)out.push(qs.slice(i*size,(i+1)*size).map(q=>q.id));return out}
+function startTopicSeries(tm){
+  const m=store.get(KQ,{});const ser=topicSeries(tm);
+  let idx=ser.findIndex(s=>s.some(id=>!m[id]));
+  if(idx<0){const sc=ser.map(s=>s.filter(id=>m[id]&&m[id].last).length/s.length);idx=sc.indexOf(Math.min(...sc))}
+  runSeries(tm,idx);
+}
+function runSeries(tm,i){const ser=topicSeries(tm);run("practice",shuffle(ser[i]),`Tema ${tnum(tm)} · Serie ${i+1} de ${ser.length}`,"S-"+tm+"-"+i)}
+function runAspect(id){const a=ASPECTOS.find(x=>x.id===id);const m=store.get(KQ,{});
+  const pool=BANK.filter(q=>a.temas.includes(q.tm));
+  const pri=shuffle(pool).sort((x,y)=>(m[x.id]?(m[x.id].last?2:0):1)-(m[y.id]?(m[y.id].last?2:0):1));
+  run("practice",shuffle(pri.slice(0,SERIE).map(q=>q.id)),"Serie por aspecto · "+a.nombre,"A-"+id)}
+
+/* ═══════ Estado y navegación ═══════ */
+let S=null, tick=null;
+const app=document.getElementById("app"), bar=document.getElementById("bar");
+function go(view){stopTimer();S=null;bar.style.width="0%";
+  ({home,practica:practiceSetup,series:seriesView,metodo,fuentes,diagnostico:diagView,biblio:()=>biblio()})[view]();window.scrollTo(0,0);app.focus({preventScroll:true})}
+
+/* ═══════ Inicio ═══════ */
+function home(){
+  const h=store.get(KH,[]);const w=store.get(KW,[]);const d=diagnosis();
+  const ms=EXAM-Date.now();let cd="";
+  if(ms>0){const dd=Math.floor(ms/864e5),hh=Math.floor(ms%864e5/36e5),mm=Math.floor(ms%36e5/6e4);
+    cd=`<div class="count" aria-label="Cuenta regresiva a la prueba"><div><b>${dd}</b><span>días</span></div><div><b>${hh}</b><span>horas</span></div><div><b>${mm}</b><span>min</span></div></div>`}
+  const last=k=>{const r=h.filter(x=>x.mode===k).slice(-1)[0];return r?`Último: ${r.pct}%`:"Sin intentos"};
+  const simCards=FIXED.map((s,i)=>`<button class="card c-${["teal","coral","violet"][i]}" onclick="startExam('sim${i+1}')">
+     <span class="k">Simulacro ${i+1}</span><h3>Cuadernillo ${["A","B","C"][i]} · 50 preguntas</h3>
+     <p>Los 20 temas con preguntas Tipo I, II y III. Sin retroalimentación hasta entregar.</p><span class="st">${last("sim"+(i+1))}</span></button>`).join("");
+  const practiced=d.filter(x=>x.seen).length;
+  const top=d.filter(x=>x.st==="Reforzar").slice(0,3);
+  const diagBlock=practiced?`<div class="panel">${top.length?`<p style="margin-bottom:10px"><b>Temas a profundizar ahora:</b> los de menor acierto en tus respuestas.</p>${diagRows(top,true)}`:`<p>No tienes temas por debajo de ${PASS}% en tus respuestas. Sigue con los temas sin practicar.</p>`}
+     <div class="row" style="margin-top:12px"><button class="btn alt" onclick="go('diagnostico')">Ver diagnóstico completo (${practiced}/20 temas practicados)</button></div></div>`
+    :`<div class="panel"><p>Cuando respondas preguntas, aquí verás qué temas debes profundizar.</p><div class="row" style="margin-top:12px"><button class="btn" onclick="go('series')">Empezar por las series por tema</button></div></div>`;
+  app.innerHTML=`
+  <section class="hero">
+    <h1>Prepárate para el 23 de octubre</h1>
+    <p>Simulador de la prueba de conocimientos del concurso «Mejores Empleados y Empleadas de Carrera Administrativa 2026». Banco de ${BANK.length} preguntas sobre los 20 temas del Anexo Técnico, con preguntas Tipo I, II y III.</p>
+    <div class="chips"><span class="chip">Series de máximo ${SERIE} preguntas</span><span class="chip">Simulacros de 50</span><span class="chip">Aprobación ≥ ${PASS} puntos</span></div>
+    ${cd}
+  </section>
+  <h2 class="sec">Tu diagnóstico</h2>${diagBlock}
+  <h2 class="sec">Series de estudio</h2>
+  <div class="grid">
+    <button class="card c-teal" onclick="go('series')"><span class="k">Por tema</span><h3>Series de hasta ${SERIE} preguntas por tema</h3><p>Cada uno de los 20 temas, con retroalimentación inmediata y fuente de cada respuesta.</p></button>
+    ${ASPECTOS.map(a=>`<button class="card c-${a.color}" onclick="runAspect('${a.id}')"><span class="k">Por aspecto</span><h3>${esc(a.nombre)}</h3><p>${esc(a.desc)}. ${SERIE} preguntas, priorizando las que no has visto o fallaste.</p></button>`).join("")}
+    <button class="card c-amber" onclick="go('practica')"><span class="k">A tu medida</span><h3>Práctica personalizada</h3><p>Elige temas y tipo de pregunta.</p></button>
+    <button class="card c-coral" onclick="startWrong()" ${w.length?"":"disabled"}><span class="k">Repaso</span><h3>Mis preguntas falladas</h3><p>${w.length?w.length+" preguntas por reforzar (series de "+SERIE+").":"Aún no tienes preguntas falladas."}</p></button>
+  </div>
+  <h2 class="sec">Simulacros completos</h2>
+  <div class="grid">${simCards}
+    <button class="card c-amber" onclick="startExam('rnd')"><span class="k">Simulacro aleatorio</span><h3>50 preguntas nuevas cada vez</h3><p>Mínimo dos preguntas por tema, mezcladas al azar.</p><span class="st">${last("rnd")}</span></button>
+  </div>
+  <h2 class="sec">Consulta</h2>
+  <div class="grid">
+    <button class="card c-violet" onclick="go('biblio')"><span class="k">Biblioteca</span><h3>Banco de documentos y enlaces</h3><p>Normas y documentos oficiales organizados por tema.</p></button>
+    <button class="card c-amber" onclick="go('metodo')"><span class="k">Metodología</span><h3>Cómo responder Tipo I, II y III</h3><p>Instrucciones y claves de respuesta.</p></button>
+    <button class="card c-teal" onclick="go('fuentes')"><span class="k">Alcance</span><h3>Qué se verificó y qué falta</h3><p>Documentos leídos completos y pendientes.</p></button>
+  </div>
+  ${h.length?historyBlock(h):""}
+  <footer>Herramienta de estudio personal. No es material oficial de la Personería de Bogotá ni de la Universidad Distrital. El progreso se guarda solo en este navegador.</footer>`;
+}
+function historyBlock(h){
+  const rows=h.slice(-8).reverse().map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.label)}</td><td><b>${x.pct}%</b> (${x.ok}/${x.n})</td></tr>`).join("");
+  return `<h2 class="sec">Tus últimos intentos</h2><div class="panel" style="overflow-x:auto"><table><thead><tr><th>Fecha</th><th>Prueba</th><th>Resultado</th></tr></thead><tbody>${rows}</tbody></table>
+  <div class="row" style="margin-top:12px"><button class="btn alt" onclick="if(confirm('¿Borrar todo el progreso, el diagnóstico y las preguntas falladas?')){[KH,KW,KQ,KS].forEach(k=>store.set(k,k===KQ||k===KS?{}:[]));go('home')}">Borrar progreso</button></div></div>`;
+}
+
+/* ═══════ Vistas de series, diagnóstico y biblioteca ═══════ */
+function seriesView(){
+  const m=store.get(KQ,{});const sv=store.get(KS,{});
+  app.innerHTML=`<h2 class="sec">Series por tema</h2><p class="muted" style="margin-bottom:12px">Cada serie tiene máximo ${SERIE} preguntas. Los temas con más preguntas se dividen en varias series.</p>
+  <div class="grid">${Object.entries(TEMAS).map(([k,v],i)=>{const ser=topicSeries(k);const n=BANK.filter(q=>q.tm===k).length;const seen=BANK.filter(q=>q.tm===k&&m[q.id]).length;
+   return `<div class="card c-${["teal","coral","violet","amber"][i%4]}"><span class="k">Tema ${tnum(k)} · ${n} preguntas · vistas ${seen}</span><h3>${esc(v)}</h3>
+   <div class="row" style="margin-top:6px">${ser.map((s,j)=>`<button class="btn sm ${sv["S-"+k+"-"+j]!=null?"alt":""}" onclick="runSeries('${k}',${j})">Serie ${j+1} · ${s.length}${sv["S-"+k+"-"+j]!=null?" · "+sv["S-"+k+"-"+j]+"%":""}</button>`).join("")}
+   <button class="btn alt sm" onclick="biblio('${k}')">Fuentes</button></div></div>`}).join("")}</div>`;
+}
+function diagView(){
+  const d=diagnosis();const g=s=>d.filter(x=>x.st===s);
+  app.innerHTML=`<h2 class="sec">Diagnóstico: qué temas profundizar</h2>
+  <div class="panel"><p class="small muted">Se calcula con tu última respuesta a cada pregunta, en series, práctica y simulacros. <b>Reforzar</b>: menos de ${PASS}% de aciertos. <b>En progreso</b>: entre ${PASS}% y 84%, o menos del 60% del tema visto. <b>Dominado</b>: 85% o más con al menos el 60% del tema visto.</p>
+  <div class="chips" style="margin-top:10px"><span class="chip">Reforzar: ${g("Reforzar").length}</span><span class="chip">Sin practicar: ${g("Sin practicar").length}</span><span class="chip">En progreso: ${g("En progreso").length}</span><span class="chip">Dominado: ${g("Dominado").length}</span></div></div>
+  <div class="panel" style="margin-top:12px">${diagRows(d)}</div>
+  <div class="row" style="margin-top:20px"><button class="btn" onclick="go('home')">Volver al inicio</button></div>`;
+}
+function biblio(focus){
+  const block=(k,title)=>`<section class="panel bib" id="bib-${k}" style="margin-top:12px"><h3 style="font-family:var(--display);margin-bottom:8px">${title}</h3><ul class="list">${FUENTES[k].map(f=>`<li>${f.u?`<a href="${esc(f.u)}" target="_blank" rel="noopener">${esc(f.t)}</a>`:esc(f.t)+" <span class='muted small'>(sin enlace público)</span>"}</li>`).join("")}</ul>${k!=="GEN"?`<div class="row" style="margin-top:10px"><button class="btn sm" onclick="startTopicSeries('${k}')">Practicar este tema</button></div>`:""}</section>`;
+  stopTimer();S=null;bar.style.width="0%";
+  app.innerHTML=`<h2 class="sec">Banco de documentos y enlaces</h2>
+  <p class="muted">Fuentes oficiales para estudiar cada tema. Algunos documentos de la Personería solo se descargan desde su portal o la intranet.</p>
+  <div class="row" style="margin-top:10px"><label for="bsel"><b>Ir al tema</b></label><select id="bsel" onchange="document.getElementById('bib-'+this.value).scrollIntoView({behavior:'smooth'})"><option value="GEN">Portales generales</option>${Object.entries(TEMAS).map(([k,v])=>`<option value="${k}">Tema ${tnum(k)} · ${esc(v)}</option>`).join("")}</select></div>
+  ${block("GEN","Portales generales")}${Object.entries(TEMAS).map(([k,v])=>block(k,`Tema ${tnum(k)} · ${esc(v)}`)).join("")}
+  <div class="row" style="margin-top:20px"><button class="btn" onclick="go('home')">Volver al inicio</button></div>`;
+  window.scrollTo(0,0);
+  if(focus){const el=document.getElementById("bib-"+focus);if(el){el.scrollIntoView();el.classList.add("hl")}}
+}
+
+/* ═══════ Práctica personalizada ═══════ */
+function practiceSetup(){
+  const list=Object.entries(TEMAS).map(([k,v])=>`<label class="tpick"><input type="checkbox" name="tm" value="${k}" checked><span><span class="n">Tema ${tnum(k)} · ${BANK.filter(q=>q.tm===k).length} preguntas</span><br>${esc(v)}</span></label>`).join("");
+  app.innerHTML=`<h2 class="sec">Práctica personalizada</h2>
+  <div class="panel">
+    <div class="row"><button class="btn alt" onclick="document.querySelectorAll('[name=tm]').forEach(c=>c.checked=true)">Todos</button><button class="btn alt" onclick="document.querySelectorAll('[name=tm]').forEach(c=>c.checked=false)">Ninguno</button></div>
+    <div class="tlist">${list}</div>
+    <div class="row"><label for="nq"><b>Preguntas</b></label>
+      <select id="nq"><option>10</option><option>15</option><option selected>20</option></select>
+      <label for="tp"><b>Tipo</b></label>
+      <select id="tp"><option value="0">Todos</option><option value="1">Solo Tipo I</option><option value="2">Solo Tipo II</option><option value="3">Solo Tipo III</option></select></div>
+    <div class="row" style="margin-top:16px"><button class="btn" onclick="startPractice()">Empezar</button></div>
+  </div>`;
+}
+function startPractice(){
+  const tms=[...document.querySelectorAll("[name=tm]:checked")].map(c=>c.value);
+  const n=Math.min(SERIE,+document.getElementById("nq").value), tp=+document.getElementById("tp").value;
+  const pool=BANK.filter(q=>tms.includes(q.tm)&&(!tp||q.t===tp));
+  if(!pool.length){alert("Selecciona al menos un tema con preguntas del tipo elegido.");return}
+  run("practice",shuffle(pool).slice(0,n).map(q=>q.id),"Práctica personalizada");
+}
+function startWrong(){const w=store.get(KW,[]).filter(id=>BYID[id]);if(!w.length)return;run("practice",shuffle(w).slice(0,SERIE),"Repaso de falladas")}
+
+/* ═══════ Motor de preguntas ═══════ */
+function run(mode,ids,label,seriesKey){
+  const items=ids.map(id=>makeItem(BYID[id],Math.random));
+  S={mode,label,items,ans:Array(items.length).fill(null),mark:Array(items.length).fill(false),i:0,done:Array(items.length).fill(false),start:Date.now(),seriesKey,examKey:null};
+  renderQ();
+}
+function startExam(key){
+  const ids=key==="rnd"?randomExam():FIXED[+key.slice(3)-1];
+  const label=key==="rnd"?"Simulacro aleatorio":"Simulacro "+key.slice(3)+" · Cuadernillo "+["A","B","C"][+key.slice(3)-1];
+  const r=key==="rnd"?Math.random:rng(77*(+key.slice(3)));
+  const items=ids.map(id=>makeItem(BYID[id],r));
+  S={mode:"exam",label,items,ans:Array(items.length).fill(null),mark:Array(items.length).fill(false),i:0,done:[],start:Date.now(),examKey:key};
+  startTimer();renderQ();
+}
+function startTimer(){stopTimer();tick=setInterval(()=>{const el=document.getElementById("tm");if(el&&S)el.textContent="⏱ "+fmt(Math.floor((Date.now()-S.start)/1000))},1000)}
+function stopTimer(){if(tick)clearInterval(tick);tick=null}
+
+function renderQ(){
+  const it=S.items[S.i], q=BYID[it.id], n=S.items.length, exam=S.mode==="exam";
+  const show=!exam&&S.done[S.i];
+  bar.style.width=((S.i+1)/n*100)+"%";
+  let body="";
+  if(q.t===1) body=`<p class="qtext">${esc(q.q)}</p>`;
+  if(q.t===2) body=`<p class="qtext">${esc(q.q)}</p><ol class="stmts">${q.s.map((s,k)=>`<li><b>${k+1}.</b><span>${esc(s)}</span></li>`).join("")}</ol>`;
+  if(q.t===3) body=`<div class="ar"><div><span>AFIRMACIÓN</span>${esc(q.af)}</div><p class="porque">PORQUE</p><div><span>RAZÓN</span>${esc(q.rz)}</div></div>`;
+  const opts=it.order.map((oi,pos)=>{let cls="opt";
+    if(show){if(pos===it.key)cls+=" ok";else if(pos===S.ans[S.i])cls+=" no"}else if(pos===S.ans[S.i])cls+=" sel";
+    return `<button class="${cls}" ${show?"disabled":""} onclick="pick(${pos})" aria-pressed="${pos===S.ans[S.i]}"><span class="l">${L[pos]}</span><span>${esc(optText(q,oi))}</span></button>`}).join("");
+  let fb="";
+  if(show){const ok=S.ans[S.i]===it.key;
+    fb=`<div class="fb ${ok?"ok":"no"}" role="status"><h4>${ok?"¡Correcto!":"Respuesta correcta: "+L[it.key]}</h4><p>${esc(q.e)}</p><p class="src">Fuente: ${esc(q.f)} · <a href="#" onclick="biblio('${q.tm}');return false">ver documentos del tema</a></p></div>`}
+  const navBtns=exam?
+    `<button class="btn alt" onclick="move(-1)" ${S.i===0?"disabled":""}>← Anterior</button>
+     <button class="mark ${S.mark[S.i]?"on":""}" onclick="S.mark[S.i]=!S.mark[S.i];renderQ()">${S.mark[S.i]?"★ Marcada":"☆ Marcar para revisar"}</button>
+     ${S.i<n-1?`<button class="btn" onclick="move(1)">Siguiente →</button>`:`<button class="btn coral" onclick="submitExam()">Entregar prueba</button>`}`
+    : show?`<button class="btn alt" onclick="finishPractice()">Terminar</button>${S.i<n-1?`<button class="btn" onclick="move(1)">Siguiente →</button>`:`<button class="btn coral" onclick="finishPractice()">Ver resultados</button>`}`
+    :`<button class="btn alt" onclick="finishPractice()">Terminar</button><button class="btn" onclick="check()" ${S.ans[S.i]!==null?"":"disabled"}>Calificar</button>`;
+  const dots=exam?`<div class="dots" aria-label="Navegación de preguntas">${S.items.map((_,k)=>`<button class="dot ${S.ans[k]!==null?"ans":""} ${S.mark[k]?"mk":""} ${k===S.i?"cur":""}" onclick="S.i=${k};renderQ()" aria-label="Pregunta ${k+1}${S.ans[k]!==null?", respondida":""}${S.mark[k]?", marcada":""}">${k+1}</button>`).join("")}</div>
+     <p class="small muted" style="margin-top:8px">Respondidas: ${S.ans.filter(a=>a!==null).length} de ${n} · La línea amarilla indica preguntas marcadas.</p>`:"";
+  app.innerHTML=`
+  <div class="qhead"><span class="pill">${esc(S.label)}</span>${exam?`<span class="timer" id="tm">⏱ ${fmt(Math.floor((Date.now()-S.start)/1000))}</span>`:""}</div>
+  <div class="panel">
+    <div class="row" style="justify-content:space-between;margin-bottom:10px"><b>Pregunta ${S.i+1} de ${n}</b><span class="pill t${q.t}">${TIPO[q.t]}</span></div>
+    <div style="margin-bottom:10px">${chip(q.tm)}</div>
+    <div class="howto">${HOWTO[q.t]}</div>
+    ${body}
+    <div class="opts" role="group" aria-label="Opciones de respuesta">${opts}</div>
+    ${fb}
+    <div class="qnav">${navBtns}</div>
+  </div>${dots}`;
+  if(show)document.getElementById("live").textContent=S.ans[S.i]===it.key?"Correcto":"Incorrecto. La respuesta correcta es "+L[it.key];
+}
+function pick(pos){if(!S||(S.mode!=="exam"&&S.done[S.i]))return;S.ans[S.i]=pos;renderQ()}
+function check(){if(S.ans[S.i]===null)return;S.done[S.i]=true;const it=S.items[S.i];record(it.id,S.ans[S.i]===it.key);renderQ()}
+function move(d){S.i=Math.max(0,Math.min(S.items.length-1,S.i+d));renderQ();window.scrollTo({top:0,behavior:"smooth"})}
+function submitExam(){
+  const pend=S.ans.filter(a=>a===null).length;
+  if(pend&&!confirm(`Tienes ${pend} pregunta(s) sin responder. ¿Entregar de todos modos?`))return;
+  stopTimer();S.items.forEach((it,k)=>record(it.id,S.ans[k]===it.key));results(S.items.map((_,k)=>k));
+}
+function finishPractice(){const idx=S.items.map((_,k)=>k).filter(k=>S.done[k]);if(!idx.length){go("home");return}results(idx)}
+
+/* ═══════ Acta de calificación ═══════ */
+function results(idx){
+  const sec=Math.floor((Date.now()-S.start)/1000);
+  const rows=idx.map(k=>{const it=S.items[k];return{k,it,q:BYID[it.id],ok:S.ans[k]===it.key}});
+  const ok=rows.filter(r=>r.ok).length,n=rows.length,pct=Math.round(ok/n*100);
+  const h=store.get(KH,[]);h.push({date:new Date().toLocaleString("es-CO",{dateStyle:"short",timeStyle:"short"}),mode:S.examKey||"practice",label:S.label,ok,n,pct});store.set(KH,h.slice(-40));
+  if(S.seriesKey){const sv=store.get(KS,{});sv[S.seriesKey]=pct;store.set(KS,sv)}
+  const agg=f=>{const m={};rows.forEach(r=>{const k=f(r);m[k]=m[k]||{ok:0,n:0};m[k].n++;if(r.ok)m[k].ok++});return m};
+  const byT=agg(r=>r.q.tm);
+  const bars=(m,name)=>Object.entries(m).sort((a,b)=>a[1].ok/a[1].n-b[1].ok/b[1].n).map(([k,v])=>{const p=Math.round(v.ok/v.n*100);const c=p>=PASS?"var(--ok)":p>=50?"var(--amber)":"var(--bad)";
+    return `<div class="bar"><div class="t"><span>${esc(name(k))}</span><span>${v.ok}/${v.n} · ${p}%</span></div><div class="tr"><i style="width:${p}%;background:${c}"></i></div></div>`}).join("");
+  const pass=pct>=PASS, col=pass?"var(--ok)":pct>=50?"var(--amber)":"var(--bad)";
+  const weak=Object.entries(byT).filter(([k,v])=>v.ok/v.n<PASS/100).sort((a,b)=>a[1].ok/a[1].n-b[1].ok/b[1].n);
+  const weakBlock=weak.length?`<p style="margin-bottom:8px">En este intento quedaste por debajo de ${PASS}% en ${weak.length} tema(s). Practica su serie y revisa sus fuentes:</p>${weak.map(([k,v])=>`<div class="drow"><div class="dmain"><span class="st bad">${Math.round(v.ok/v.n*100)}%</span><b>${chip(k)}</b></div><div class="row"><button class="btn sm" onclick="startTopicSeries('${k}')">Practicar serie</button><button class="btn alt sm" onclick="biblio('${k}')">Fuentes</button></div></div>`).join("")}`
+    :`<p>Ningún tema de este intento quedó por debajo de ${PASS}%. Revisa el diagnóstico para ver los temas aún sin practicar.</p>`;
+  const fails=rows.filter(r=>!r.ok);
+  const rev=fails.map(r=>{const q=r.q,it=r.it;const head=q.t===3?"Afirmación: "+q.af+" — Razón: "+q.rz:q.q;
+    const yours=S.ans[r.k]===null?"Sin responder":L[S.ans[r.k]]+". "+optText(q,it.order[S.ans[r.k]]);
+    return `<details><summary>${r.k+1}. ${esc(head.length>140?head.slice(0,140)+"…":head)}</summary><div class="ans"><div style="margin:8px 0">${chip(q.tm)}</div>
+      ${q.t===2?`<ol class="stmts">${q.s.map((s,j)=>`<li><b>${j+1}.</b><span>${esc(s)}</span></li>`).join("")}</ol>`:""}
+      <p><b>Tu respuesta:</b> ${esc(yours)}</p><p><b>Correcta:</b> ${L[it.key]}. ${esc(optText(q,it.order[it.key]))}</p><p style="margin-top:6px">${esc(q.e)}</p><p class="small muted">Fuente: ${esc(q.f)}</p></div></details>`}).join("");
+  bar.style.width="100%";
+  app.innerHTML=`<h2 class="sec">Acta de calificación</h2>
+  <div class="panel"><div class="score"><div class="ring" style="--p:${pct};--c:${col}"><div><span><b>${pct}</b><br><small>de 100</small></span></div></div>
+   <div><p class="verdict">${pass?"Superas el umbral de 70 puntos":"Aún por debajo del umbral de 70 puntos"}</p><p class="muted">${esc(S.label)} · ${ok} aciertos de ${n}${S.mode==="exam"?" · Tiempo: "+fmt(sec):""}</p>
+   <p class="small muted" style="margin-top:6px">El Anexo Técnico selecciona a quienes obtengan 70 puntos o más y mejor resultado en su nivel.</p></div></div></div>
+  <h2 class="sec">Qué profundizar</h2><div class="panel">${weakBlock}<div class="row" style="margin-top:12px"><button class="btn alt" onclick="go('diagnostico')">Ver diagnóstico acumulado</button></div></div>
+  <h2 class="sec">Desempeño por tema</h2><div class="panel bars">${bars(byT,k=>"Tema "+tnum(k)+" · "+TEMAS[k])}</div>
+  <h2 class="sec">Desempeño por tipo de pregunta</h2><div class="panel bars">${bars(agg(r=>r.q.t),k=>TIPO[k])}</div>
+  <h2 class="sec">Preguntas para repasar (${fails.length})</h2>
+  ${fails.length?`<div class="rev">${rev}</div>`:`<div class="panel">Sin errores. ¡Excelente!</div>`}
+  <div class="row" style="margin-top:20px"><button class="btn" onclick="go('home')">Volver al inicio</button>${fails.length?`<button class="btn alt" onclick="run('practice',${JSON.stringify(fails.map(r=>r.it.id).slice(0,SERIE)).replace(/"/g,"&quot;")},'Repaso de este intento')">Repasar las falladas</button>`:""}</div>`;
+  window.scrollTo(0,0);
+}
+
+/* ═══════ Metodología y alcance ═══════ */
+function metodo(){
+  app.innerHTML=`<h2 class="sec">Metodología de las preguntas</h2>
+  <div class="panel"><p>El simulador usa los tres tipos de ítem de la guía de pruebas de la Procuraduría General de la Nación, el mismo sistema de tu preparación para la Rama Judicial. El Anexo Técnico no publica el formato que usará la Universidad Distrital, así que conviene dominar los tres.</p></div>
+  <h2 class="sec">Tipo I · Única respuesta</h2><div class="panel"><p>Un enunciado y cuatro opciones; solo una es correcta. El orden de las opciones se baraja en cada intento, para que memorices el contenido y no la letra.</p></div>
+  <h2 class="sec">Tipo II · Opciones combinadas</h2><div class="panel"><p>Cuatro afirmaciones numeradas. Marca según esta clave:</p>
+   <table style="margin-top:10px"><tbody>${OPTS_II.map((o,i)=>`<tr><td><b>${L[i]}</b></td><td>${o}</td></tr>`).join("")}</tbody></table>
+   <div class="warn"><b>Truco:</b> empieza por la afirmación 4. Si es verdadera, solo pueden ser C o D; si es falsa, solo A o B. Luego decide con la 2.</div></div>
+  <h2 class="sec">Tipo III · Afirmación — Razón</h2><div class="panel"><p>Evalúa por separado la afirmación y la razón; después, si la razón explica la afirmación.</p>
+   <table style="margin-top:10px"><tbody>${OPTS_III.map((o,i)=>`<tr><td><b>${L[i]}</b></td><td>${o}</td></tr>`).join("")}</tbody></table>
+   <div class="warn"><b>Ojo:</b> no hay opción para «ambas falsas». Si ambas son verdaderas, pregúntate: ¿la afirmación es cierta <i>por</i> lo que dice la razón?</div></div>
+  <div class="row" style="margin-top:20px"><button class="btn" onclick="go('home')">Volver al inicio</button></div>`;
+}
+function fuentes(){
+  app.innerHTML=`<h2 class="sec">Qué se verificó y qué falta</h2>
+  <div class="panel"><h3 style="font-family:var(--display);margin-bottom:8px">Documentos leídos completos</h3><ul class="list">
+   <li>Acuerdo Distrital 978 de 2025 (texto completo).</li>
+   <li>Decreto Ley 1421 de 1993, texto vigente.</li>
+   <li>Resolución 180 de 2025 (MECI, Comité Directivo Institucional y Modelo de Gestión) — documento aportado.</li>
+   <li>Plan Estratégico Institucional 2024-2028, 01-PL-012 versión 4 — documento aportado.</li>
+   <li>Manual Específico de Funciones 08-MN-001 versión 14 (994 páginas) — documento aportado.</li>
+   <li>Cartilla del Código de Integridad de la Personería (7 valores y principios de acción) — documento aportado.</li>
+   <li>Página del SGA en la intranet (política ambiental).</li>
+   <li>Normas nacionales de los temas transversales (ver la Biblioteca).</li></ul></div>
+  <div class="panel" style="margin-top:12px"><h3 style="font-family:var(--display);margin-bottom:8px">Pendientes por consultar</h3>
+  <div class="warn" style="margin-top:0"><ul class="list">
+   <li><b>Resolución 1567-10000-2026</b>: el acto que adopta el manual no se encontró; el manual v14 sí se leyó completo.</li>
+   <li><b>Anexos del PEI</b> (PESTEL, DOFA y matriz de metas): el portal de la Personería bloquea la lectura automática.</li>
+   <li><b>Documentos del SGA</b>: matriz de aspectos e impactos, matriz de riesgos ambientales y PIGA (bloqueados para lectura automática).</li>
+   <li><b>Resoluciones internas 371 de 2024 y 195 de 2025</b>, citadas en la normatividad del PEI.</li>
+   <li><b>Reglamento de Incentivos 2026</b> de la Personería, citado en el Anexo Técnico.</li></ul></div></div>
+  <div class="row" style="margin-top:20px"><button class="btn" onclick="go('biblio')">Abrir la Biblioteca</button><button class="btn alt" onclick="go('home')">Volver al inicio</button></div>`;
+}
+
+/* ═══════ Tema visual, teclado e inicio ═══════ */
+function toggleTheme(){const r=document.documentElement;const cur=r.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");r.dataset.theme=cur==="dark"?"light":"dark";store.set(KT,r.dataset.theme)}
+(()=>{const t=store.get(KT,null);if(t)document.documentElement.dataset.theme=t})();
+document.addEventListener("keydown",e=>{if(!S||["SELECT","INPUT"].includes(e.target.tagName))return;
+  const k=e.key.toUpperCase();const map={A:0,B:1,C:2,D:3,"1":0,"2":1,"3":2,"4":3};
+  if(k in map){pick(map[k]);return}
+  if(e.key==="Enter"&&S.mode!=="exam"){if(!S.done[S.i])check();else if(S.i<S.items.length-1)move(1)}
+  if(e.key==="ArrowRight"&&S.mode==="exam")move(1);
+  if(e.key==="ArrowLeft"&&S.mode==="exam")move(-1);
+});
+home();
+
+</script>
+</body>
+</html>
